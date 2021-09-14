@@ -5,28 +5,32 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
+      <div class="inner-box">
+        <el-dropdown class="avatar-container" trigger="click">
+          <div class="avatar-wrapper">
+            <h2>{{user_info?user_info.name:null}}</h2>
+            <i class="iconfont icon-jiantouxia" style="margin-left:10px;"></i>
+          </div>
+          <el-dropdown-menu slot="dropdown" class="user-dropdown">
+            <el-dropdown-item @click.native="logout">
+              <span style="display:block;">退出</span>
             </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <!-- <div class="nav-title-item" @click="toMessage">
+          <i class="iconfont icon-a-Iconly-Bulk-VolumeUp"></i>
+          <span>未读信息(0)</span>
+        </div> -->
+        <!-- <div class="nav-title-item">
+          <i class="iconfont icon-Iconly-Bulk-Calling"></i>
+          <span>13850055005</span>
+        </div> -->
+        <!-- <div class="nav-title-item" @click="toFinance">
+          <i class="iconfont icon-Iconly-Bulk-Wallet"></i>
+          <span>充值</span>
+        </div> -->
+      </div>
+      
     </div>
   </div>
 </template>
@@ -44,8 +48,11 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'user_info'
     ])
+  },
+  mounted() {
+    console.log(this.user_info);
   },
   methods: {
     toggleSideBar() {
@@ -53,27 +60,52 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
+      console.log('haha');
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      
+    },
+
+    toMessage() {
+      this.$router.push({
+        path:'/message/index'
+      })
+    },
+    toFinance() {
+      this.$router.push({
+        path:'/finance/index'
+      })
     }
   }
 }
 </script>
+<style lang="scss">
 
+// .navbar{
+//   .el-dropdown-menu__item--divided{
+//     line-height:35px;
+//     border-top:0;
+//     margin-top:0;
+//   }
+// }
+</style>
 <style lang="scss" scoped>
+@import 'src/styles/mixin.scss';
 .navbar {
-  height: 50px;
+  height: 60px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  // background: #fff;
+  background:rgb(69, 116, 208);
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
-    line-height: 46px;
+    line-height: 55px;
     height: 100%;
     float: left;
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
+    // color:#fff;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -86,14 +118,25 @@ export default {
 
   .right-menu {
     float: right;
+    width:68%;
     height: 100%;
-    line-height: 50px;
-
+    line-height: 60px;
+    overflow-y:hidden;
+    overflow-x:auto;
+    @include scrollBarX();
     &:focus {
       outline: none;
     }
 
+    .inner-box{
+      float:right;
+      width:825px;
+      height:60px;
+      line-height:60px;
+    }
+
     .right-menu-item {
+      
       display: inline-block;
       padding: 0 8px;
       height: 100%;
@@ -112,17 +155,34 @@ export default {
     }
 
     .avatar-container {
-      margin-right: 30px;
+      float:right;
+      padding:0 20px;
+      // margin-right: 30px;
+      &:hover{
+        background:rgb(64, 108, 195);
+      }
 
       .avatar-wrapper {
-        margin-top: 5px;
+        // margin-top: 5px;
         position: relative;
+        cursor:pointer;
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+        // .user-avatar {
+        //   cursor: pointer;
+        //   width: 40px;
+        //   height: 40px;
+        //   border-radius: 10px;
+        // }
+        h2{
+          display:inline-block;
+          font-size:14px;
+          font-weight:400;
+          color:#fff;
+        }
+
+        .icon-jiantouxia{
+          font-size:14px;
+          color:#fff;
         }
 
         .el-icon-caret-bottom {
@@ -132,6 +192,21 @@ export default {
           top: 25px;
           font-size: 12px;
         }
+      }
+    }
+
+    .nav-title-item{
+      float:right;
+      padding:0 20px;
+      cursor:pointer;
+      color:#fff;
+      font-size:14px;
+      border-right: 1px solid #406cc3;
+      &:hover{
+        background:rgb(64, 108, 195);
+      }
+      i{
+        margin-right:10px;
       }
     }
   }

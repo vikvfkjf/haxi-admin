@@ -17,16 +17,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/styles/mixin.scss';
 .app-main {
-  /*50 = navbar  */
-  min-height: calc(100vh - 50px);
+  /*60 = navbar  */
+  padding:20px;
+  /* min-height: calc(100vh - 60px); */
+  height: calc(100vh - 60px);
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
+  background:rgb(239, 247, 253);
+  @include scrollBar();
 }
 .fixed-header+.app-main {
-  padding-top: 50px;
+  padding-top: 60px;
 }
 </style>
 

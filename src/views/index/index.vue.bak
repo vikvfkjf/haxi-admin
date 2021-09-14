@@ -1,0 +1,177 @@
+<template>
+  <div class="index-container">
+    <h2>zhengxiaofeng，欢迎回来！</h2>
+    <div class="box-row">
+      <div class="box-row-item" style="width:80%;margin-right:20px;">
+        <h3>账户信息</h3>
+        <div class="ps" style="height:100px;">
+          <p>公司名称：{{user_info?user_info.company.name:null}}</p>
+          <p>当前余额：{{user_info.total_balance}}元 （其中云信小号冻结金额为{{user_info.freeze_balance}}元，可用金额为{{user_info.balance}}元）</p>
+        </div>
+      </div>
+      <div class="box-row-item" style="width:calc(100% - 80% - 20px);">
+        <h3>联系方式</h3>
+        <div class="ps" style="height:100px;">
+          <p>商务热线：400-105-1900</p>
+          <p>微信：xxxxx</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="box-row">
+      <h3>产品能力</h3>
+      <div class="boxs">
+        <div class="boxs-item">
+          <h4><i class="iconfont icon-Iconly-Bulk-Swap"></i>云信小号</h4>
+          <p> 保护会员号码隐私，防跳单 ，高安全性、支持短信业务、可申请全国各地市号码 </p>
+        </div>
+        <div class="boxs-item">
+            <h4><i class="iconfont icon-Iconly-Bulk-Swap"></i>云信小号</h4>
+            <p> 保护会员号码隐私，防跳单 ，高安全性、支持短信业务、可申请全国各地市号码 </p>
+          </div>
+          <div class="boxs-item">
+            <h4><i class="iconfont icon-Iconly-Bulk-Swap"></i>云信小号</h4>
+            <p> 保护会员号码隐私，防跳单 ，高安全性、支持短信业务、可申请全国各地市号码 </p>
+          </div>
+      </div>
+    </div>
+
+    <div class="box-row">
+      <h3>我的应用</h3>
+      <div class="boxs">
+        <div class="boxs-item" v-for="(item,index) in appList" :key="index">
+          <p><i class="iconfont icon-Iconly-Bulk-Document" style="margin-right:10px;"></i>{{item.app_name}}</p>
+          <p>appId:{{item.app_no}}</p>
+          <p>包含能力：<span v-for="(li,i) in item.app_product" :key="i">{{li.name}}</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="dashboard-text">name: {{ name }}</div> -->
+  </div>
+
+</template>
+
+<script>
+  import {
+    mapGetters
+  } from 'vuex'
+  import {userApp} from '@/api/application'
+  export default {
+    name: 'Index',
+    data() {
+      return {
+        appList:[]
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'user_info'
+      ])
+    },
+    mounted() {
+      this.userApp();
+    },
+    methods:{
+      userApp() {
+        userApp().then(res=>{
+          // console.log(res);
+          if(res.status_code==200) {
+            this.appList = res.data;
+          }
+        })
+      },
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  .index-container {
+    h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      letter-spacing: 0;
+      color: #4574d0;
+    }
+
+    .box-row {
+      margin-bottom: 30px;
+      h3 {
+        color: #3d3d3d;
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 10px;
+      }
+
+      .box-row-item {
+        display: inline-block;
+
+        
+
+        .ps {
+          display: flex;
+          -webkit-box-shadow: 0 0 5px 0 rgb(69 116 208 / 20%);
+          box-shadow: 0 0 5px 0 rgb(69 116 208 / 20%);
+          padding: 20px;
+          color: #606060;
+          background-color: #fff;
+          flex-direction: column;
+
+          p {
+            line-height: 30px;
+            font-size: 12px;
+            color: rgb(96, 96, 96);
+          }
+        }
+      }
+
+      .boxs {
+        display: flex;
+        padding: 20px;
+        width: 100%;
+        color: #606060;
+        background-color: #fff;
+        flex-direction: row;
+        // justify-content: space-between;
+        -webkit-box-shadow: 0 0 5px 0 rgb(69 116 208 / 20%);
+        box-shadow: 0 0 5px 0 rgb(69 116 208 / 20%);
+
+        h3 {
+          color: #3d3d3d;
+          font-size: 14px;
+          font-weight: 400;
+          margin-bottom: 10px;
+        }
+
+        .boxs-item {
+          width: 30%;
+          padding: 20px;
+          border: 1px solid #ececec;
+          border-radius: 4px;
+          
+
+          h4 {
+            font-size: 14px;
+            color: #3d3d3d;
+            margin-bottom:10px;
+            font-weight:400;
+            i{
+              margin-right:10px;
+            }
+          }
+
+          p{
+            color: #3d3d3d;
+            font-size:12px;
+            line-height:20px;
+            flex-direction: row;
+          }
+
+          // font-size:12px;
+          // color:rgb(96, 96, 96);
+        }
+      }
+    }
+  }
+
+</style>
