@@ -119,8 +119,6 @@
 
       // 修改价格配置
       sure() {
-        console.log(this.form);
-        return false;
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.loading = true;
