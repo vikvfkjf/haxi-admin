@@ -12,7 +12,7 @@
           </el-form-item>
           <el-form-item label="营业执照" prop="money">
             <div class="img">
-              <img :src="val.license_path" alt="">
+              <img :src="oss_host+'/'+val.license_path" alt="">
             </div>
           </el-form-item>
         </el-form>
@@ -37,6 +37,7 @@
         dialogVisible: false,
         loading: false,
         val: {},
+        oss_host:process.env.VUE_APP_OSS_HOST,
         form: {
           company_name:null,
           company_no: null,
@@ -59,11 +60,11 @@
     mounted() {},
     methods: {
       show(val) {
+        console.log(val);
         this.val = val;
         this.form.company_no = val.company_no;
         this.form.company_name = val.company_name;
         this.dialogVisible = true;
-        console.log(val);
       },
 
       sure(status) {
@@ -132,6 +133,13 @@
           width: 100%;
         }
       }
+
+    }
+
+    img{
+      display:block;
+      width:100%;
+      height:500px;
     }
   }
 

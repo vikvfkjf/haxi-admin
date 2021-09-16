@@ -10,14 +10,29 @@
           <el-form-item label="公司编号" prop="company_no">
             <el-input v-model="form.company_no" disabled></el-input>
           </el-form-item>
+
           <el-form-item label="每个小号月租费" prop="month_rent_price">
             <el-input v-model="form.month_rent_price" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="每分钟通话费" prop="minute_price">
+
+          <el-form-item label="计费模式" prop="price_mode">
+            <el-select v-model="form.price_mode">
+              <el-option label="每通" :value="1"></el-option>
+              <el-option label="分钟" :value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="每分钟通话费" prop="minute_price" v-if="form.price_mode==2 || form.price_mode==null">
             <el-input v-model="form.minute_price" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="每分钟录音费" prop="sound_price">
+          <el-form-item label="每分钟录音费" prop="sound_price" v-if="form.price_mode==2 || form.price_mode==null">
             <el-input v-model="form.sound_price" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="每通通话费" prop="per_price" v-if="form.price_mode==1">
+            <el-input v-model="form.per_price" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="每通录音费" prop="per_sound_price" v-if="form.price_mode==1">
+            <el-input v-model="form.per_sound_price" type="number"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -44,8 +59,11 @@
           company_name: null,
           company_no: null,
           month_rent_price: null,
+          price_mode:null,
           minute_price:null,
-          sound_price:null
+          sound_price:null,
+          per_price:null,
+          per_sound_price:null
         },
         rules: {
           company_name: [{
@@ -57,22 +75,37 @@
             required: true,
             message: '请输入公司编号',
             trigger: 'blur'
-          }, ],
+          }],
           month_rent_price: [{
             required: true,
             message: '请输入每个小号月租费',
             trigger: 'blur'
-          }, ],
-           minute_price: [{
+          }],
+          price_mode: [{
+            required: true,
+            message: '请选择计费模式',
+            trigger: 'blur'
+          }],
+          minute_price: [{
             required: true,
             message: '请输入每分钟通话费',
             trigger: 'blur'
-          }, ],
-           sound_price: [{
+          }],
+          sound_price: [{
             required: true,
-            message: '每分钟录音费',
+            message: '请输入每分钟录音费',
             trigger: 'blur'
-          }, ],
+          }],
+          per_price: [{
+            required: true,
+            message: '请输入每通通话费',
+            trigger: 'blur'
+          }],
+          per_sound_price: [{
+            required: true,
+            message: '请输入每通录音费',
+            trigger: 'blur'
+          }],
         }
       }
     },
@@ -100,6 +133,9 @@
               this.form.month_rent_price= res.data.month_rent_price;
               this.form.minute_price=res.data.minute_price;
               this.form.sound_price=res.data.sound_price;
+              this.form.price_mode=res.data.price_mode;
+              this.form.per_price=res.data.per_price;
+              this.form.per_sound_price=res.data.per_sound_price;
             }
           }
         })
@@ -110,12 +146,26 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.loading = true;
-            var params = {
-              company_no: this.form.company_no,
-              month_rent_price:this.form.month_rent_price,
-              minute_price:this.form.minute_price,
-              sound_price:this.form.sound_price,
+
+            var params = {};
+            if(this.form.price_mode==1) {
+              params = {
+                company_no: this.form.company_no,
+                month_rent_price:this.form.month_rent_price,
+                price_mode:this.form.price_mode,
+                per_price:this.form.per_price,
+                per_sound_price:this.form.per_sound_price
+              }
+            }else{
+              params = {
+                company_no: this.form.company_no,
+                month_rent_price:this.form.month_rent_price,
+                price_mode:this.form.price_mode,
+                minute_price:this.form.minute_price,
+                sound_price:this.form.sound_price
+              }
             }
+            
             modifyPriceConfig(params).then(res => {
               this.loading = false;
               if (res.status_code == 200) {
@@ -149,8 +199,11 @@
           company_name: null,
           company_no: null,
           month_rent_price: null,
+          price_mode:null,
           minute_price:null,
-          sound_price:null
+          sound_price:null,
+          per_price:null,
+          per_sound_price:null
         };
         this.$refs.form.clearValidate();
       }
