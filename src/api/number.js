@@ -24,3 +24,42 @@ export function examineNumber(data) {
     data
   })
 }
+
+/**
+ * 绑定隐私号
+ * @param {*} data 
+ * @returns 
+ */
+export function bindNumber(data) {
+  return request({
+    url: '/v1/admin/company/import-phone',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 小号列表
+ * @param {*} params 
+ * @returns 
+ */
+export function getPhoneList(params) {
+  return request({
+    url: '/v1/admin/company/phone-list',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 管理员小号列表
+ * @param {*} params 
+ * @returns 
+ */
+export function getSelfPhoneList(params) {
+  return request({
+    url: '/v1/admin/company/admin-phone-list',
+    method: 'get',
+    params
+  })
+}

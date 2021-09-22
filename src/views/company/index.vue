@@ -40,7 +40,7 @@
         </el-table-column>
         <!-- <el-table-column prop="license_path" label="营业执照">
         </el-table-column> -->
-        <el-table-column prop="" label="操作" width="180">
+        <el-table-column prop="" label="操作" >
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="price(scope.row)">价格</el-button>
             <el-button type="warning" size="mini" @click="examine(scope.row)">审核</el-button>
@@ -63,9 +63,9 @@
       </el-pagination> -->
     </div>
 
-    <recharge-dialog ref="rechargeDialog"></recharge-dialog>
-    <price-dialog ref="priceDialog"></price-dialog>
-    <add-white-dialog ref="addWhiteDialog"></add-white-dialog>
+    <recharge-dialog ref="rechargeDialog" @success="success"></recharge-dialog>
+    <price-dialog ref="priceDialog" @success="success"></price-dialog>
+    <add-white-dialog ref="addWhiteDialog" @success="success"></add-white-dialog>
     <examine-dialog ref="examineDialog" @success="success"></examine-dialog>
   </div>
 

@@ -40,7 +40,7 @@
           </span>
         </el-form-item>
 
-        <el-form-item prop="verify_code">
+        <!-- <el-form-item prop="verify_code">
           <span class="svg-container">
             <i class="iconfont icon-a-Iconly-Bulk-ShieldDone" />
           </span>
@@ -54,7 +54,7 @@
             style="width:160px;"
           />
           <img class="picValid" :src="verifyCodeImg" alt="" @click="resetVerifyCodeImg">
-        </el-form-item>
+        </el-form-item> -->
 
         <el-button :loading="loading" type="danger" round @click.native.prevent="handleLogin">登录</el-button>
 
@@ -62,7 +62,7 @@
       <div class="box-right">
         <h2>没有帐号？</h2>
         <p>立即注册加入我们，和我们一起开始旅程吧</p>
-        <el-button round @click="toRegister">注册</el-button>
+        <!-- <el-button round @click="toRegister">注册</el-button> -->
         <!-- <el-button>注册</el-button> -->
       </div>
     </div>

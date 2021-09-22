@@ -38,7 +38,7 @@
 </template>
 
 <script>
-  import {addAdministrator,editAdministrator,getRoleList} from '@/api/administrator.js'
+  import {addAdministrator,editAgent,getRoleList} from '@/api/administrator.js'
   export default {
     name: 'Add-admin-dialog',
     data() {
@@ -49,10 +49,11 @@
         loading: false,
         val: {},
         form: {
+          user_no:null,
           name:null,
           phone:null,
           email:null,
-          role_key:null,
+          role_key:'11',
           password:null,
           company_name: null,
         },
@@ -100,7 +101,9 @@
         if(type=="add") {
 
         }else if(type=="edit") {
+          console.log(row);
           this.form = {
+            user_no:row.user_no,
             name:row.name,
             phone:row.phone,
             email:row.email,
@@ -125,6 +128,7 @@
           if (valid) {
             this.loading = true;
             var params = this.form;
+            console.log(this.form);
             addAdministrator(params).then(res => {
               this.loading = false;
               if (res.status_code == 200) {
@@ -156,12 +160,13 @@
           if (valid) {
             this.loading = true;
             var params = {
+              user_no:this.form.user_no,
               name:this.form.name,
               email:this.form.email,
               company_name:this.form.company_name,
               role_key:this.form.role_key
             };
-            editAdministrator(params).then(res => {
+            editAgent(params).then(res => {
               this.loading = false;
               if (res.status_code == 200) {
                 this.$notify({

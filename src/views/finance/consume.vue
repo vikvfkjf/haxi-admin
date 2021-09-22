@@ -25,10 +25,12 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
+      <el-table v-loading="loading" :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
         <el-table-column prop="id" label="id" width="80">
         </el-table-column>
         <el-table-column prop="company_no" label="公司编号" width="200">
+        </el-table-column>
+        <el-table-column prop="company.name" label="公司名称" width="200">
         </el-table-column>
         
         <el-table-column prop="cost" label="消费金额（元）">
@@ -69,6 +71,7 @@
     name: 'finance-consume',
     data() {
       return {
+        loading:false,
         form:{
           company_no:null,
           time:null
@@ -95,20 +98,24 @@
         this.getConsumeList();
       },
       getConsumeList() {
+        this.loading = true;
         var params = {
-          'equal[company_no]':this.form.company_no,
+          'equal[company_no]':this.form.company_no?this.form.company_no:null,
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
           page:this.pages.page,
           per_page:this.pages.per_page
         }
         getConsumeList(params).then(res=>{
+          this.loading = false;
           if(res.status_code==200) {
             this.list = res.data.data;
             this.pages.total = res.data.total;
           }else{
 
           }
+        }).catch(err=>{
+          this.loading = false;
         })
       },
       search() {

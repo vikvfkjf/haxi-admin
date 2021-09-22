@@ -8,7 +8,7 @@
       <div class="section section1">
         <ul>
           <li>
-            <span class="lab">用户名：</span>
+            <span class="lab">登录名：</span>
             <span class="value">{{user_info.name}}</span>
             <div class="btns">
               <el-button plain  size="mini" @click="changeNameBtn">更改</el-button>
@@ -43,6 +43,50 @@
             <span class="value">{{user_info.admin_company?user_info.admin_company.name:'暂无'}}</span>
             <div class="btns">
               <el-button plain  size="mini" @click="changeCompanyName">更改</el-button>
+            </div>
+          </li>
+          <li>
+            <span class="lab">收款银行：</span>
+            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.bank:'暂无'}}</span>
+            <div class="btns">
+              <el-button plain  size="mini" @click="">更改</el-button>
+            </div>
+          </li>
+          <li>
+            <span class="lab">银行全称：</span>
+            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.due_bank:'暂无'}}</span>
+            <div class="btns">
+              <el-button plain  size="mini" @click="">更改</el-button>
+            </div>
+          </li>
+          <li>
+            <span class="lab">收款人：</span>
+            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.payee:'暂无'}}</span>
+            <div class="btns">
+              <el-button plain  size="mini" @click="">更改</el-button>
+            </div>
+          </li>
+          
+          <li>
+            <span class="lab">收款账户：</span>
+            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.card_no:'暂无'}}</span>
+            <div class="btns">
+              <el-button plain  size="mini" @click="">更改</el-button>
+            </div>
+          </li>
+
+          <li>
+            <span class="lab">联系人：</span>
+            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.contact:'暂无'}}</span>
+            <div class="btns">
+              <el-button plain  size="mini" @click="">更改</el-button>
+            </div>
+          </li>
+          <li>
+            <span class="lab">联系号码：</span>
+            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.phone:'暂无'}}</span>
+            <div class="btns">
+              <el-button plain  size="mini" @click="">更改</el-button>
             </div>
           </li>
           <!-- <li>

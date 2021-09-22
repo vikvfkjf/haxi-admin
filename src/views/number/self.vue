@@ -1,14 +1,18 @@
 <template>
-  <div class="company-white-container">
+  <div class="number-self-container">
     <div class="title">
-      <h2>白名单列表</h2>
+      <h2>自有小号列表</h2>
+      <el-button type="primary" size="mini" @click="bindSelf">新增</el-button>
     </div>
 
     <div class="tables">
       <div class="forms">
         <el-form ref="form" :model="form" label-width="80px" inline size="mini">
-          <el-form-item label="公司编号">
+          <!-- <el-form-item label="公司编号">
             <el-input v-model="form.company_no" placeholder="请输入公司编号"></el-input>
+          </el-form-item> -->
+          <el-form-item label="小号">
+            <el-input v-model="form.x_phone" placeholder="请输入小号"></el-input>
           </el-form-item>
           <el-form-item label="创建时间">
             <el-date-picker
@@ -28,17 +32,22 @@
       <el-table v-loading="loading" :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
         <el-table-column prop="id" label="id" width="80">
         </el-table-column>
-        <el-table-column prop="company_no" label="公司编号" width="200">
+        <el-table-column prop="city_name" label="地区" width="200">
         </el-table-column>
-        <!-- <el-table-column prop="type" label="充值方式" width="180">
-        </el-table-column> -->
-        <el-table-column prop="ip" label="ip">
+        <el-table-column prop="code" label="地区编号" width="200">
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间">
+        <el-table-column prop="phone_mode_name" label="小号模式" width="200">
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="x_phone" label="小号" width="200">
+        </el-table-column>
+        <el-table-column prop="effect_time" label="生效时间" width="150">
+        </el-table-column>
+        <el-table-column prop="expire_time" label="失效时间" width="150">
+        </el-table-column>
+        <el-table-column prop="validate_bind_record" label="状态">
           <template slot-scope="scope">
-            <el-button type="error" size="mini" @click="deleteIp(scope.row)">删除</el-button>
+            <span v-if="scope.row.validate_bind_record">绑定中</span>
+            <span v-else>空闲</span>
           </template>
         </el-table-column>
       </el-table>
@@ -46,13 +55,15 @@
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="pages.page"
+        :current-page="pages.current_page"
         :page-sizes="[10,20,50,100]"
         :page-size="pages.per_page"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pages.total">
       </el-pagination>
     </div>
+
+    <bind-self-dialog ref="bindSelfDialog" @success="success"></bind-self-dialog>
   </div>
 
 </template>
@@ -61,47 +72,50 @@
   import {
     mapGetters
   } from 'vuex'
-  import {getWhiteIpList,deleteIp} from '@/api/company.js'
+  import {getSelfPhoneList} from '@/api/number.js'
+  import bindSelfDialog from './components/bind-self-dialog.vue'
   export default {
-    name: 'Company-white',
+    name: 'number-self',
+    components:{
+        bindSelfDialog
+    },
     data() {
       return {
         loading:false,
         form:{
-          company_no:null,
+          x_phone:null,
           time:null
         },
         list:[],
         pages:{
-          page:1,
+          current_page:1,
           per_page:10,
           total:null
         },
       }
     },
     mounted() {
-      this.form.company_no = this.$route.query.company_no?this.$route.query.company_no:null;
-      this.getWhiteIpList();
+      this.getSelfPhoneList();
     },
     methods:{
       handleSizeChange(e) {
         this.pages.per_page = e;
-        this.getWhiteIpList();
+        this.getSelfPhoneList();
       },
       handleCurrentChange(e) {
-        this.pages.page = e;
-        this.getWhiteIpList();
+        this.pages.current_page = e;
+        this.getSelfPhoneList();
       },
-      getWhiteIpList() {
+      getSelfPhoneList() {
         this.loading = true;
         var params = {
-          'equal[company_no]':this.form.company_no?this.form.company_no:null,
+          'equal[x_phone]':this.form.x_phone?this.form.x_phone:null,
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
-          page:this.pages.page,
+          page:this.pages.current_page,
           per_page:this.pages.per_page
         }
-        getWhiteIpList(params).then(res=>{
+        getSelfPhoneList(params).then(res=>{
           this.loading = false;
           if(res.status_code==200) {
             this.list = res.data.data;
@@ -113,29 +127,14 @@
       },
       search() {
         console.log(this.form);
-        this.pages.page = 1;
-        this.getWhiteIpList();
+        this.pages.current_page = 1;
+        this.getSelfPhoneList();
       },
-
-      deleteIp(row) {
-        var params = {
-          company_no:row.company_no,
-          ips:row.ip
-        }
-        deleteIp(params).then(res=>{
-          if(res.status_code == 200) {
-            this.$message({
-              type:'success',
-              message:'删除成功',
-            })
-            this.getWhiteIpList();
-          }else{
-            this.$message({
-              type:'error',
-              message:'删除失败',
-            })
-          }
-        })
+      success() {
+        this.getSelfPhoneList();
+      },
+      bindSelf() {
+        this.$refs.bindSelfDialog.show();
       }
     }
     //   computed: {
@@ -150,7 +149,7 @@
 <style lang="scss" scoped>
   @import 'src/styles/mixin.scss';
 
-  .company-white-container {
+  .number-self-container {
     .title {
       display: flex;
       flex-direction: row;
@@ -185,11 +184,6 @@
         text-align:center;
       }
     }
-
-
-
-
-
   }
 
 </style>

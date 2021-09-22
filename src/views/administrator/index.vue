@@ -5,7 +5,7 @@
       <el-button type="primary" size="mini" @click="addAdministrator">新增</el-button>
     </div>
 
-    <div class="tables">
+    <div class="tables" v-loading="loading">
       <div class="forms">
         <el-form ref="form" :model="form" label-width="80px" inline size="mini">
           <el-form-item label="用户名">
@@ -21,11 +21,11 @@
               <el-option label="禁用" value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="角色">
+          <!-- <el-form-item label="角色">
             <el-select v-model="form.role_key">
               <el-option v-for="(item,index) in roleList" :key="index" :label="item.name" :value="item.key"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="创建时间">
             <el-date-picker
@@ -88,7 +88,7 @@
   import {
     mapGetters
   } from 'vuex'
-  import {getAdministrator,getRoleList} from '@/api/administrator.js'
+  import {getAdministrator,getRoleList,delAgent} from '@/api/administrator.js'
   import addeditAdminDialog from './components/addedit-admin-dialog.vue'
   export default {
     name: 'finance-record',
@@ -97,6 +97,7 @@
     },
     data() {
       return {
+        loading:false,
         form:{
           name:null,
           status:null,
@@ -134,22 +135,48 @@
         })
       },
       getAdministrator() {
+        this.loading=true;
         var params = {
           'equal[name]':this.form.name,
           'equal[phone]':this.form.phone,
           'equal[status]':this.form.status,
-          'equal[role_key]':this.form.role_key,
+          'equal[role_key]':'11',
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
           page:this.pages.page,
           per_page:this.pages.per_page
         }
         getAdministrator(params).then(res=>{
+          this.loading=false;
           if(res.status_code==200) {
             this.list = res.data.data;
             this.pages.total = res.data.total;
           }else{
 
+          }
+        }).catch(err=>{
+          this.loading=false;
+        })
+      },
+
+      deleteHandle(row) {
+        var params = {
+          user_no:row.user_no
+        }
+        delAgent(params).then(res=>{
+          if(res.status_code==200) {
+            this.$notify({
+              title:'提示',
+              type:'success',
+              message:'删除成功'
+            })
+            this.getAdministrator();
+          }else{
+            this.$notify({
+              title:'提示',
+              type:'error',
+              message:'删除失败'
+            })
           }
         })
       },
@@ -162,12 +189,6 @@
       },
       addSuccess() {
         this.getAdministrator();
-      },
-      
-
-      // TODO
-      deleteHandle() {
-
       },
       search() {
         this.pages.page = 1;

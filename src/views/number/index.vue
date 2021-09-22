@@ -25,7 +25,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
+      <el-table v-loading="loading" :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
         <el-table-column prop="id" label="id" width="80">
         </el-table-column>
         <el-table-column prop="company_no" label="公司编号" width="200">
@@ -44,9 +44,9 @@
         </el-table-column>
         <el-table-column prop="apply_status" label="审核" width="100">
           <template slot-scope="scope">
-            <span v-if="scope.row.action==1">待审核</span>
-            <span v-if="scope.row.action==2">通过</span>
-            <span v-if="scope.row.action==3">拒绝</span>
+            <span v-if="scope.row.apply_status==1">待审核</span>
+            <span v-if="scope.row.apply_status==2">通过</span>
+            <span v-if="scope.row.apply_status==3">拒绝</span>
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注" width="200">
@@ -55,7 +55,8 @@
           <template slot-scope="scope">
             <el-button size="mini" @click="bind(scope.row)">绑定</el-button>
             <el-button type="primary" size="mini" @click="examine(scope.row)">审核</el-button>
-            <el-button type="warning" size="mini" @click="detail(scope.row)">查看详情</el-button>
+            <el-button type="warning" size="mini" @click="detail(scope.row)">申请小号</el-button>
+            <el-button type="danger" size="mini" @click="look(scope.row)">通过小号</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,6 +96,7 @@
     },
     data() {
       return {
+        loading:false,
         form:{
           company_no:null,
           time:null
@@ -121,14 +123,16 @@
         this.getPhoneApplyList();
       },
       getPhoneApplyList() {
+        this.loading = true;
         var params = {
-          'equal[company_no]':this.form.company_no,
+          'equal[company_no]':this.form.company_no?this.form.company_no:null,
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
           page:this.pages.current_page,
           per_page:this.pages.per_page
         }
         getPhoneApplyList(params).then(res=>{
+          this.loading = false;
           if(res.status_code==200) {
             this.list = res.data.data;
             this.pages.total = res.data.total;
@@ -153,6 +157,15 @@
       },
       bind(row) {
         this.$refs.bindDialog.show(row);
+      },
+      look(row) {
+        this.$router.push({
+          path:'/number/list',
+          query:{
+            company_no:row.company_no
+          }
+
+        })
       }
     }
     //   computed: {

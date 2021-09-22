@@ -1,7 +1,7 @@
 <template>
-  <div class="company-white-container">
+  <div class="number-list-container">
     <div class="title">
-      <h2>白名单列表</h2>
+      <h2>小号通过列表</h2>
     </div>
 
     <div class="tables">
@@ -9,6 +9,9 @@
         <el-form ref="form" :model="form" label-width="80px" inline size="mini">
           <el-form-item label="公司编号">
             <el-input v-model="form.company_no" placeholder="请输入公司编号"></el-input>
+          </el-form-item>
+          <el-form-item label="小号">
+            <el-input v-model="form.x_phone" placeholder="请输入小号"></el-input>
           </el-form-item>
           <el-form-item label="创建时间">
             <el-date-picker
@@ -30,29 +33,52 @@
         </el-table-column>
         <el-table-column prop="company_no" label="公司编号" width="200">
         </el-table-column>
-        <!-- <el-table-column prop="type" label="充值方式" width="180">
-        </el-table-column> -->
-        <el-table-column prop="ip" label="ip">
+        <el-table-column prop="company.name" label="公司名称" width="200">
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间">
+        <el-table-column prop="app_no" label="应用编号" width="200">
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="city_name" label="地区" width="200">
+        </el-table-column>
+        <el-table-column prop="phone_mode_name" label="小号模式" width="200">
+        </el-table-column>
+        <el-table-column prop="x_phone" label="小号" width="200">
+        </el-table-column>
+        <el-table-column prop="effect_time" label="生效时间" width="150">
+        </el-table-column>
+        <el-table-column prop="expire_time" label="失效时间" width="150">
+        </el-table-column>
+        <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-            <el-button type="error" size="mini" @click="deleteIp(scope.row)">删除</el-button>
+            <span v-if="scope.row.status==1">空闲</span>
+            <span v-if="scope.row.status==2">使用中</span>
+            <span v-if="scope.row.status==3">禁用</span>
           </template>
         </el-table-column>
+        <!-- <el-table-column prop="remark" label="备注">
+        </el-table-column> -->
+        <!-- <el-table-column prop="" label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="bind(scope.row)">绑定</el-button>
+            <el-button type="primary" size="mini" @click="examine(scope.row)">审核</el-button>
+            <el-button type="warning" size="mini" @click="detail(scope.row)">查看详情</el-button>
+          </template>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="pages.page"
+        :current-page="pages.current_page"
         :page-sizes="[10,20,50,100]"
         :page-size="pages.per_page"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pages.total">
       </el-pagination>
     </div>
+
+    <!-- <examine-dialog ref="examineDialog" @success="success"></examine-dialog>
+    <number-dialog ref="numberDialog"></number-dialog>
+    <bind-dialog ref="bindDialog"></bind-dialog> -->
   </div>
 
 </template>
@@ -61,19 +87,28 @@
   import {
     mapGetters
   } from 'vuex'
-  import {getWhiteIpList,deleteIp} from '@/api/company.js'
+  import {getPhoneList} from '@/api/number.js'
+//   import examineDialog from './components/examine-dialog.vue'
+//   import numberDialog from './components/number-dialog.vue'
+//   import bindDialog from './components/bind-dialog.vue'
   export default {
-    name: 'Company-white',
+    name: 'Number-list',
+    components:{
+    //   examineDialog,
+    //   numberDialog,
+    //   bindDialog
+    },
     data() {
       return {
         loading:false,
         form:{
+          x_phone:null,
           company_no:null,
           time:null
         },
         list:[],
         pages:{
-          page:1,
+          current_page:1,
           per_page:10,
           total:null
         },
@@ -81,27 +116,28 @@
     },
     mounted() {
       this.form.company_no = this.$route.query.company_no?this.$route.query.company_no:null;
-      this.getWhiteIpList();
+      this.getPhoneList();
     },
     methods:{
       handleSizeChange(e) {
         this.pages.per_page = e;
-        this.getWhiteIpList();
+        this.getPhoneList();
       },
       handleCurrentChange(e) {
-        this.pages.page = e;
-        this.getWhiteIpList();
+        this.pages.current_page = e;
+        this.getPhoneList();
       },
-      getWhiteIpList() {
+      getPhoneList() {
         this.loading = true;
         var params = {
+          'equal[x_phone]':this.form.x_phone?this.form.x_phone:null,
           'equal[company_no]':this.form.company_no?this.form.company_no:null,
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
-          page:this.pages.page,
+          page:this.pages.current_page,
           per_page:this.pages.per_page
         }
-        getWhiteIpList(params).then(res=>{
+        getPhoneList(params).then(res=>{
           this.loading = false;
           if(res.status_code==200) {
             this.list = res.data.data;
@@ -113,29 +149,20 @@
       },
       search() {
         console.log(this.form);
-        this.pages.page = 1;
-        this.getWhiteIpList();
+        this.pages.current_page = 1;
+        this.getPhoneList();
       },
-
-      deleteIp(row) {
-        var params = {
-          company_no:row.company_no,
-          ips:row.ip
-        }
-        deleteIp(params).then(res=>{
-          if(res.status_code == 200) {
-            this.$message({
-              type:'success',
-              message:'删除成功',
-            })
-            this.getWhiteIpList();
-          }else{
-            this.$message({
-              type:'error',
-              message:'删除失败',
-            })
-          }
-        })
+      examine(row) {
+        this.$refs.examineDialog.show(row);
+      },
+      success() {
+        this.getPhoneList();
+      },
+      detail(row) {
+        this.$refs.numberDialog.show(row);
+      },
+      bind(row) {
+        this.$refs.bindDialog.show(row);
       }
     }
     //   computed: {
@@ -150,7 +177,7 @@
 <style lang="scss" scoped>
   @import 'src/styles/mixin.scss';
 
-  .company-white-container {
+  .number-list-container {
     .title {
       display: flex;
       flex-direction: row;
@@ -185,11 +212,6 @@
         text-align:center;
       }
     }
-
-
-
-
-
   }
 
 </style>

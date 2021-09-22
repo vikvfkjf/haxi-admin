@@ -87,7 +87,7 @@
                   type: 'success'
                 })
                 this.handleClose();
-
+                this.$emit('success');
               } else {
                 this.$notify({
                   title: '提示',

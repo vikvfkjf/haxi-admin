@@ -92,6 +92,16 @@ export const constantRoutes = [
       name: 'Number-index',
       component: () => import('@/views/number/index'),
       meta: { title: '小号申请列表' }
+    },{
+      path: 'list',
+      name: 'Number-list',
+      component: () => import('@/views/number/list'),
+      meta: { title: '小号通过列表' }
+    },{
+      path: 'self',
+      name: 'Number-self',
+      component: () => import('@/views/number/self'),
+      meta: { title: '自有小号列表' }
     }]
   },
 

@@ -40,6 +40,19 @@ export function editAdministrator(data) {
 }
 
 /**
+ * 修改代理人员的信息
+ * @param {*} data 
+ * @returns 
+ */
+export function editAgent(data) {
+  return request({
+    url: '/v1/admin/agent/change-info',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 角色列表
  * @param {*} params 
  * @returns 
@@ -49,5 +62,18 @@ export function getRoleList(params) {
     url: '/v1/admin/user/role-list',
     method: 'get',
     params
+  })
+}
+
+/**
+ * 删除代理人员
+ * @param {*} data 
+ * @returns 
+ */
+export function delAgent(data) {
+  return request({
+    url: '/v1/admin/agent',
+    method: 'delete',
+    data
   })
 }
