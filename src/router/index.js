@@ -105,60 +105,6 @@ export const constantRoutes = [
     }]
   },
 
-  
-
-  
-
-  // {
-  //   path: '/application',
-  //   component: Layout,
-  //   name: 'Application',
-  //   redirect: '/application/all',
-  //   meta: { title: '应用管理', icon: 'el-icon-monitor' },
-  //   alwaysShow: true,
-  //   children: [{
-  //     path: 'all',
-  //     name: 'Application-all',
-  //     component: () => import('@/views/application/index'),
-  //     meta: { title: '我的应用' }
-  //   }]
-  // },
-
-  // {
-  //   path: '/product',
-  //   component: Layout,
-  //   name: 'Product',
-  //   redirect: '/product/index',
-  //   meta: { title: '产品中心', icon: 'el-icon-goods' },
-  //   alwaysShow: true,
-  //   children: [{
-  //     path: 'index',
-  //     name: 'Product-index',
-  //     component: () => import('@/views/product/index'),
-  //     meta: { title: '隐私号' }
-  //   }]
-  // },
-
-  // {
-  //   path: '/cost',
-  //   component: Layout,
-  //   name: 'Cost',
-  //   redirect: '/cost/index',
-  //   meta: { title: '费用中心', icon: 'el-icon-notebook-1' },
-  //   alwaysShow: true,
-  //   children: [{
-  //     path: 'index',
-  //     name: 'Cost-index',
-  //     component: () => import('@/views/cost/index'),
-  //     meta: { title: '费用明细' }
-  //   },{
-  //     path: 'total',
-  //     name: 'Cost-total',
-  //     component: () => import('@/views/cost/total'),
-  //     meta: { title: '费用统计' }
-  //   }]
-  // },
-
   {
     path: '/finance',
     component: Layout,
@@ -180,6 +126,22 @@ export const constantRoutes = [
   },
 
   {
+    path: '/pass',
+    component: Layout,
+    name: 'Pass',
+    redirect: '/pass/index',
+    meta: { title: '通道管理', icon: 'el-icon-wallet' },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'pass-index',
+      component: () => import('@/views/pass/index'),
+      meta: { title: '通道列表' }
+    }]
+  },
+
+
+  {
     path: '/administrator',
     component: Layout,
     name: 'Administrator',
@@ -190,7 +152,7 @@ export const constantRoutes = [
       path: 'index',
       name: 'Administrator-index',
       component: () => import('@/views/administrator/index'),
-      meta: { title: '管理员列表' }
+      meta: { title: '代理列表' }
     }]
   },
 

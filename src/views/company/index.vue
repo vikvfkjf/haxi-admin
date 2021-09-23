@@ -12,6 +12,7 @@
         <el-button type="text" icon="el-icon-coin" @click="whiteList" :disabled="disabled">白名单列表</el-button>
         <el-button type="text" icon="el-icon-coin" @click="consumeList" :disabled="disabled">消费记录</el-button>
         <el-button type="text" icon="el-icon-coin" @click="numberList" :disabled="disabled">小号列表</el-button>
+        <el-button type="text" icon="el-icon-coin" @click="passConfig" :disabled="disabled">通道配置</el-button>
       </div>
 
       <el-table :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}"
@@ -67,6 +68,7 @@
     <price-dialog ref="priceDialog" @success="success"></price-dialog>
     <add-white-dialog ref="addWhiteDialog" @success="success"></add-white-dialog>
     <examine-dialog ref="examineDialog" @success="success"></examine-dialog>
+    <pass-dialog ref="passDialog" @success="success"></pass-dialog>
   </div>
 
 </template>
@@ -81,13 +83,15 @@
   import priceDialog from './components/price-dialog.vue'
   import addWhiteDialog from './components/add-white-dialog.vue'
   import examineDialog from './components/examine-dialog.vue'
+  import passDialog from './components/pass-dialog.vue'
   export default {
     name: 'finance-record',
     components:{
       rechargeDialog,
       priceDialog,
       addWhiteDialog,
-      examineDialog
+      examineDialog,
+      passDialog
     },
     data() {
       return {
@@ -156,6 +160,9 @@
       },
       addWhite() {
         this.$refs.addWhiteDialog.show(this.multipleSelection[0]);
+      },
+      passConfig() {
+        this.$refs.passDialog.show(this.multipleSelection[0]);
       },
       success() {
         this.getCompanyList();

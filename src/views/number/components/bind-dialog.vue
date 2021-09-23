@@ -20,7 +20,7 @@
           </el-form-item>
 
           <el-form-item label="有效时间" prop="valid_time">
-            <el-input v-model="form.valid_time" disabled>
+            <el-input v-model="form.valid_time">
               <template slot="append">月</template>
             </el-input>
           </el-form-item>
