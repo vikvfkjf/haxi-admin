@@ -7,8 +7,8 @@
     <div class="tables">
       <div class="forms">
         <el-form ref="form" :model="form" label-width="80px" inline size="mini">
-          <el-form-item label="公司编号">
-            <el-input v-model="form.company_no" placeholder="请输入公司编号"></el-input>
+          <el-form-item label="用户编号">
+            <el-input v-model="form.user_no" placeholder="请输入用户编号"></el-input>
           </el-form-item>
           <el-form-item label="创建时间">
             <el-date-picker
@@ -28,11 +28,14 @@
       <el-table v-loading="loading" :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
         <el-table-column prop="id" label="id" width="80">
         </el-table-column>
-        <el-table-column prop="company_no" label="公司编号" width="200">
+        <el-table-column prop="top_num" label="订单编号" width="200">
         </el-table-column>
-        <el-table-column prop="company.name" label="公司名称" width="180">
+        <el-table-column prop="top_way" label="付款方式" width="180">
+          <template slot-scope="scope">
+            <span v-if="scope.row.top_way==1">线下</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="recharge" label="充值金额">
+        <el-table-column prop="recharge_num" label="充值金额（条）">
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间">
         </el-table-column>
@@ -63,7 +66,7 @@
       return {
         loading:false,
         form:{
-          company_no:null,
+          user_no:null,
           time:null
         },
         list:[],
@@ -75,7 +78,7 @@
       }
     },
     mounted() {
-      this.form.company_no = this.$route.query.company_no?this.$route.query.company_no:null;
+      this.form.user_no = this.$route.query.user_no?this.$route.query.user_no:null;
       this.getRechargeList();
     },
     methods:{
@@ -90,7 +93,7 @@
       getRechargeList() {
         this.loading = true;
         var params = {
-          'equal[company_no]':this.form.company_no?this.form.company_no:null,
+          'equal[user_no]':this.form.user_no?this.form.user_no:null,
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
           page:this.pages.page,

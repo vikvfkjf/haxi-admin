@@ -140,7 +140,7 @@
           'equal[name]':this.form.name,
           'equal[phone]':this.form.phone,
           'equal[status]':this.form.status,
-          'equal[role_key]':'11',
+          // 'equal[role_key]':'11',
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
           page:this.pages.page,

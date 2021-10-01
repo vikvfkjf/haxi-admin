@@ -1,16 +1,24 @@
 <template>
-  <div class="finance-consume-container">
+  <div class="task-child-container">
     <div class="title">
-      <h2>消费记录</h2>
+      <h2>子任务列表</h2>
     </div>
 
     <div class="tables">
       <div class="forms">
-        <el-form ref="form" :model="form" label-width="80px" inline size="mini">
-          <el-form-item label="公司编号">
-            <el-input v-model="form.user_no" placeholder="请输入用户编号"></el-input>
+        <el-form ref="form" :model="form" label-width="90px" inline size="mini">
+          <el-form-item label="父任务编号">
+            <el-input v-model="form.task_no" placeholder="请输入任务编号"></el-input>
           </el-form-item>
-          <el-form-item label="创建时间">
+          <el-form-item label="发送状态">
+            <el-select v-model="form.send_status">
+              <el-option label="待发送" :value="1"></el-option>
+              <el-option label="已发送" :value="2"></el-option>
+              <el-option label="发送失败" :value="3"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="发送时间">
             <el-date-picker
               v-model="form.time"
               value-format="yyyy-MM-dd"
@@ -28,16 +36,26 @@
       <el-table v-loading="loading" :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 119px)" size="mini">
         <el-table-column prop="id" label="id" width="80">
         </el-table-column>
-        <el-table-column prop="user_no" label="用户编号" width="200">
+        <el-table-column prop="task_no" label="父任务编号" width="200">
         </el-table-column>
-        <el-table-column prop="user.name" label="用户名称" width="200">
+        <el-table-column prop="sub_task_no" label="子任务编号" width="200">
         </el-table-column>
-        
-        <el-table-column prop="cost_num" label="消费数量">
+        <el-table-column prop="task_no" label="任务编号" width="200">
         </el-table-column>
-        <el-table-column prop="explain" label="费用说明">
+        <el-table-column prop="send_time" label="发送时间" width="200">
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间">
+        <el-table-column prop="send_status" label="发送型" width="200">
+          <template slot-scope="scope">
+            <span v-if="scope.row.send_status==1">待发送</span>
+            <span v-if="scope.row.send_status==2">已发送</span>
+            <span v-if="scope.row.send_status==3">发送失败</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="" label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="sendSubTask(scope.row)">执行</el-button>
+            <el-button size="mini" @click="changeSubTask(scope.row)">修改子任务</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -51,6 +69,9 @@
         :total="pages.total">
       </el-pagination>
     </div>
+
+    <sub-examine-dialog ref="subExamineDialog" @success="success"></sub-examine-dialog>
+    <change-subtask-dialog ref="changeSubtaskDialog" @success="success"></change-subtask-dialog>
   </div>
 
 </template>
@@ -59,14 +80,22 @@
   import {
     mapGetters
   } from 'vuex'
-  import {getConsumeList} from '@/api/finance.js'
+  import {subTaskList} from '@/api/task.js'
+  
+  import subExamineDialog from './components/sub-examine-dialog.vue';
+  import changeSubtaskDialog from './components/change-subtask-dialog.vue'
   export default {
-    name: 'finance-consume',
+    name: 'task-child',
+    components:{
+      subExamineDialog,
+      changeSubtaskDialog
+    },
     data() {
       return {
         loading:false,
         form:{
-          user_no:null,
+          task_no:null,
+          send_status:null,
           time:null
         },
         list:[],
@@ -78,28 +107,29 @@
       }
     },
     mounted() {
-      this.form.user_no = this.$route.query.user_no?this.$route.query.user_no:null;
-      this.getConsumeList();
+      this.form.task_no = this.$route.query.task_no?this.$route.query.task_no:null;
+      this.subTaskList();
     },
     methods:{
       handleSizeChange(e) {
         this.pages.per_page = e;
-        this.getConsumeList();
+        this.subTaskList();
       },
       handleCurrentChange(e) {
         this.pages.page = e;
-        this.getConsumeList();
+        this.subTaskList();
       },
-      getConsumeList() {
+      subTaskList() {
         this.loading = true;
         var params = {
-          'equal[user_no]':this.form.user_no?this.form.user_no:null,
+          'equal[task_no]':this.form.task_no?this.form.task_no:null,
+          'equal[send_status]':this.form.send_status?this.form.send_status:null,
           'great_equal[created_at]':this.form.time?this.form.time[0]+' 00:00:00':null,
           'less_equal[created_at]':this.form.time?this.form.time[1]+' 23:59:59':null,
           page:this.pages.page,
           per_page:this.pages.per_page
         }
-        getConsumeList(params).then(res=>{
+        subTaskList(params).then(res=>{
           this.loading = false;
           if(res.status_code==200) {
             this.list = res.data.data;
@@ -107,21 +137,23 @@
           }else{
 
           }
-        }).catch(err=>{
-          this.loading = false;
         })
       },
       search() {
         console.log(this.form);
         this.pages.page = 1;
-        this.getConsumeList();
+        this.subTaskList();
+      },
+      success() {
+        this.subTaskList();
+      },
+      sendSubTask(row) {
+        this.$refs.subExamineDialog.show(row);
+      },
+      changeSubTask(row) {
+        this.$refs.changeSubtaskDialog.show(row);
       }
     }
-    //   computed: {
-    //     ...mapGetters([
-    //       'name'
-    //     ])
-    //   }
   }
 
 </script>
@@ -129,7 +161,7 @@
 <style lang="scss" scoped>
   @import 'src/styles/mixin.scss';
 
-  .finance-consume-container {
+  .task-child-container {
     .title {
       display: flex;
       flex-direction: row;
@@ -164,11 +196,6 @@
         text-align:center;
       }
     }
-
-
-
-
-
   }
 
 </style>

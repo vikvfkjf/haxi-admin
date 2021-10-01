@@ -30,72 +30,6 @@
           </li>
         </ul>
       </div>
-
-      <div class="section section1">
-        <ul>
-          <!-- <li>
-            <span class="lab">认证信息：</span>
-            <span class="value" ><i class="iconfont icon-authenticate" style="color:blue;font-weight:800;"></i> 已认证通过</span>
-            <span class="value" ><i class="iconfont icon-authenticate" style="color:red;font-weight:800;"></i> 未认证</span>
-          </li> -->
-          <li>
-            <span class="lab">公司名称：</span>
-            <span class="value">{{user_info.admin_company?user_info.admin_company.name:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="changeCompanyName">更改</el-button>
-            </div>
-          </li>
-          <li>
-            <span class="lab">收款银行：</span>
-            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.bank:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="">更改</el-button>
-            </div>
-          </li>
-          <li>
-            <span class="lab">银行全称：</span>
-            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.due_bank:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="">更改</el-button>
-            </div>
-          </li>
-          <li>
-            <span class="lab">收款人：</span>
-            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.payee:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="">更改</el-button>
-            </div>
-          </li>
-          
-          <li>
-            <span class="lab">收款账户：</span>
-            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.card_no:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="">更改</el-button>
-            </div>
-          </li>
-
-          <li>
-            <span class="lab">联系人：</span>
-            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.contact:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="">更改</el-button>
-            </div>
-          </li>
-          <li>
-            <span class="lab">联系号码：</span>
-            <span class="value">{{user_info.admin_company_info?user_info.admin_company_info.phone:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="">更改</el-button>
-            </div>
-          </li>
-          <!-- <li>
-            <span class="lab">营业执照：</span>
-            <span class="value">
-            </span>
-          </li> -->
-        </ul>
-      </div>
     </div>
 
     <change-user-dialog ref="changeUserDialog"></change-user-dialog>
@@ -107,7 +41,6 @@
   import {
     mapGetters
   } from 'vuex'
-  import {changePassword} from '@/api/user'
   import changeUserDialog from './components/change-user-dialog.vue'
   export default {
     name: 'Account-index',

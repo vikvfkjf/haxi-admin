@@ -76,3 +76,43 @@ export function changeUserInfo(data) {
     data
   })
 }
+
+/**
+ * 用户列表
+ * @param {*} params 
+ * @returns 
+ */
+export function userList(params) {
+  return request({
+    url: '/v1/admin/user-manage/list',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 添加用户
+ * @param {*} data 
+ * @returns 
+ */
+export function addUser(data) {
+  return request({
+    url: '/v1/admin/user-manage/add-user',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 修改用户信息
+ * @param {*} data 
+ * @returns 
+ */
+export function changeUser(data) {
+  return request({
+    url: '/v1/admin/user-manage/update-user-info',
+    method: 'post',
+    data
+  })
+}
+

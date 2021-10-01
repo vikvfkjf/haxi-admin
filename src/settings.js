@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '豁通科技管理系统',
+  title: 'SMS后台管理系统',
 
   /**
    * @type {boolean} true | false

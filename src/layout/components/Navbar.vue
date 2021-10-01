@@ -17,18 +17,6 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <!-- <div class="nav-title-item" @click="toMessage">
-          <i class="iconfont icon-a-Iconly-Bulk-VolumeUp"></i>
-          <span>未读信息(0)</span>
-        </div> -->
-        <!-- <div class="nav-title-item">
-          <i class="iconfont icon-Iconly-Bulk-Calling"></i>
-          <span>13850055005</span>
-        </div> -->
-        <!-- <div class="nav-title-item" @click="toFinance">
-          <i class="iconfont icon-Iconly-Bulk-Wallet"></i>
-          <span>充值</span>
-        </div> -->
       </div>
       
     </div>

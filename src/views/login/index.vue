@@ -40,31 +40,9 @@
           </span>
         </el-form-item>
 
-        <!-- <el-form-item prop="verify_code">
-          <span class="svg-container">
-            <i class="iconfont icon-a-Iconly-Bulk-ShieldDone" />
-          </span>
-          <el-input
-            ref="verify_code"
-            v-model="loginForm.verify_code"
-            placeholder="请输入验证码"
-            name="verify_code"
-            type="text"
-            auto-complete="off"
-            style="width:160px;"
-          />
-          <img class="picValid" :src="verifyCodeImg" alt="" @click="resetVerifyCodeImg">
-        </el-form-item> -->
-
         <el-button :loading="loading" type="danger" round @click.native.prevent="handleLogin">登录</el-button>
 
       </el-form>
-      <div class="box-right">
-        <h2>没有帐号？</h2>
-        <p>立即注册加入我们，和我们一起开始旅程吧</p>
-        <!-- <el-button round @click="toRegister">注册</el-button> -->
-        <!-- <el-button>注册</el-button> -->
-      </div>
     </div>
   </div>
 </template>
@@ -98,7 +76,7 @@ export default {
         password: '',
         // verify_key: 'jump_key',
         // verify_code:'dddyyy123iiikkkaaa',
-        jump_key:'dddyyy123iiikkkaaa'
+        jump_key:'ddlksadfjiow3223dcsFaa'
       },
       loginRules: {
         phone: [{ required: true, trigger: 'blur', message: '请输入用户名或手机号' }],
@@ -206,6 +184,53 @@ $cursor: #fff;
 }
 </style>
 
+<style lang="scss">
+/* 修复input 背景不协调 和光标变色 */
+/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+
+$bg:#283443;
+$light_gray:#fff;
+$cursor: #fff;
+
+@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+  .login-container .el-input input {
+    color: $cursor;
+  }
+}
+
+/* reset element-ui css */
+.login-container {
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+
+    input {
+      background: transparent;
+      border: 0px;
+      -webkit-appearance: none;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+      color: $light_gray;
+      height: 47px;
+      caret-color: $cursor;
+
+      &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px $bg inset !important;
+        -webkit-text-fill-color: $cursor !important;
+      }
+    }
+  }
+
+  .el-form-item {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    color: #454545;
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
@@ -214,110 +239,75 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  // background-color: $bg;
-  background:#f6f5f7;
+  background-color: $bg;
   overflow: hidden;
 
-  .login-box{
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 14px 28px rgb(0 0 0 / 25%), 0 10px 10px rgb(0 0 0 / 22%);
+  .login-form {
     position: relative;
+    width: 520px;
+    max-width: 100%;
+    padding: 160px 35px 0;
+    margin: 0 auto;
     overflow: hidden;
-    width: 768px;
-    // max-width: 100%;
-    height: 480px;
-    margin:calc( (100vh - 480px)/2 ) auto 0;
+  }
 
-    .login-form {
-      display: inline-block;
-      position: relative;
-      width: 385px;
-      max-width: 100%;
-      margin: 0 auto;
-      padding:0 40px;
-      overflow: hidden;
+  .tips {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
 
-      .el-form-item{
-        background:#eee;
-        border-radius:3px;
-        .svg-container {
-          display: inline-block;
-          padding: 0 5px 0 15px;
-          color: $dark_gray;
-          vertical-align: middle;
-          width: 35px;
-        }
-
-        .el-input{
-          display:inline-block;
-          width:calc(100% - 65px);
-        }
-
-        .picValid{
-          float:right;
-          width:calc(100% - 200px);
-          height:42px;
-          cursor:pointer;
-        }
-
+    span {
+      &:first-of-type {
+        margin-right: 16px;
       }
-
-      .title-container {
-        position: relative;
-
-        .title {
-          font-size: 26px;
-          color: #000;
-          margin: 40px auto 40px auto;
-          text-align: center;
-          font-weight: bold;
-        }
-      }
-
-      .show-pwd {
-        position: absolute;
-        right: 10px;
-        top: 0px;
-        font-size: 16px;
-        color: $dark_gray;
-        cursor: pointer;
-        user-select: none;
-      }
-
-      .el-button{
-        display:block;
-        width:100px;
-        margin:0 auto;
-      }
-
     }
+  }
 
-    .box-right{
-      float:right;
-      background:#ff416c;
-      width:calc(100% - 385px);
-      height:100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 0 35px;
-      height: 100%;
-      color:#fff;
-      h2{
-        font-size:32px;
-      }
-      p{
-        font-size: 14px;
-        line-height: 20px;
-        letter-spacing: .5px;
-        margin: 20px 0 30px;
-      }
-      .el-button{
-        width:100px;
-        border:1px solid #ff416c;
-      }
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: $dark_gray;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
+  }
+
+  .title-container {
+    position: relative;
+
+    .title {
+      font-size: 26px;
+      color: $light_gray;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .thirdparty-button {
+    position: absolute;
+    right: 0;
+    bottom: 6px;
+  }
+
+  .el-button{
+    margin:0 auto;
+    display:block;
+    // text-align: center;
+  }
+
+  @media only screen and (max-width: 470px) {
+    .thirdparty-button {
+      display: none;
     }
   }
 }
