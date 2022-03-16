@@ -43,12 +43,6 @@ export const constantRoutes = [
   },
 
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-
-  {
     path: '/',
     component: Layout,
     redirect: '/index',
@@ -59,83 +53,6 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'el-icon-house' }
     }]
   },
-
-  {
-    path: '/user',
-    component: Layout,
-    name: 'User',
-    redirect: '/user/index',
-    meta: { title: '用户管理', icon: 'el-icon-monitor' },
-    alwaysShow: true,
-    children: [{
-      path: 'index',
-      name: 'User-index',
-      component: () => import('@/views/user/index'),
-      meta: { title: '用户列表' }
-    }]
-  },
-
-
-  {
-    path: '/task',
-    component: Layout,
-    name: 'Task',
-    redirect: '/task/index',
-    meta: { title: '任务管理', icon: 'el-icon-monitor' },
-    alwaysShow: true,
-    children: [{
-      path: 'index',
-      name: 'Task-index',
-      component: () => import('@/views/task/index'),
-      meta: { title: '任务列表' }
-    },{
-      path: 'child',
-      name: 'Task-child',
-      component: () => import('@/views/task/child'),
-      meta: { title: '子任务列表' }
-    },{
-      path: 'sendrecord',
-      name: 'Task-sendrecord',
-      component: () => import('@/views/task/sendrecord'),
-      meta: { title: '发送记录' }
-    }]
-  },
-
-  {
-    path: '/finance',
-    component: Layout,
-    name: 'Finance',
-    redirect: '/finance/index',
-    meta: { title: '财务管理', icon: 'el-icon-wallet' },
-    alwaysShow: true,
-    children: [{
-      path: 'record',
-      name: 'Finance-record',
-      component: () => import('@/views/finance/record'),
-      meta: { title: '充值记录' }
-    },{
-      path: 'consume',
-      name: 'Finance-consume',
-      component: () => import('@/views/finance/consume'),
-      meta: { title: '消费记录' }
-    }]
-  },
-
-  {
-    path: '/pass',
-    component: Layout,
-    name: 'Pass',
-    redirect: '/pass/index',
-    meta: { title: '通道管理', icon: 'el-icon-wallet' },
-    alwaysShow: true,
-    children: [{
-      path: 'index',
-      name: 'pass-index',
-      component: () => import('@/views/pass/index'),
-      meta: { title: '通道列表' }
-    }]
-  },
-
 
   {
     path: '/account',
@@ -152,9 +69,7 @@ export const constantRoutes = [
     },
   ]
   },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+ 
 ]
 
 const createRouter = () => new Router({
@@ -172,3 +87,138 @@ export function resetRouter() {
 }
 
 export default router
+
+export const asyncRouterMap = [
+  {
+    path: '/project',
+    component: Layout,
+    name: 'project',
+    redirect: '/project/index',
+    meta: { title: '项目管理', icon: 'el-icon-monitor',role: ['admin']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'project-index',
+      component: () => import('@/views/project/index'),
+      meta: { title: '项目列表',role: ['admin'] }
+    }]
+  },
+
+  {
+    path: '/member',
+    component: Layout,
+    name: 'member',
+    redirect: '/member/index',
+    meta: { title: '会员管理', icon: 'el-icon-monitor',role: ['admin','agent','sale']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'member-index',
+      component: () => import('@/views/member/index'),
+      meta: { title: '会员列表',role: ['admin','agent','sale'] }
+    },{
+      path: 'earn',
+      name: 'member-earn',
+      component: () => import('@/views/member/earn'),
+      meta: { title: '会员挖矿收益',role: ['admin','agent','sale'] }
+    }]
+  },
+
+  {
+    path: '/earnrule',
+    component: Layout,
+    name: 'earnrule',
+    redirect: '/earnrule/index',
+    meta: { title: '收益管理', icon: 'el-icon-monitor',role: ['admin','agent']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'earnrule-index',
+      component: () => import('@/views/earnrule/index'),
+      meta: { title: '收益规则',role: ['admin'] }
+    },{
+      path: 'transfer',
+      name: 'earnrule-transfer',
+      component: () => import('@/views/transfer/index'),
+      meta: { title: '划转记录',role: ['admin','agent'] }
+    }]
+  },
+
+  {
+    path: '/pool',
+    component: Layout,
+    name: 'pool',
+    redirect: '/pool/index',
+    meta: { title: '矿池管理', icon: 'el-icon-monitor',role: ['admin']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'pool-index',
+      component: () => import('@/views/pool/index'),
+      meta: { title: '矿池列表',role: ['admin'] }
+    }]
+  },
+
+  {
+    path: '/agent',
+    component: Layout,
+    name: 'agent',
+    redirect: '/agent/index',
+    meta: { title: '代理-业务员管理', icon: 'el-icon-monitor',role: ['admin','agent']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'agent-index',
+      component: () => import('@/views/agent/index'),
+      meta: { title: '人员列表',role: ['admin','agent'] }
+    }]
+  },
+
+  {
+    path: '/configure',
+    component: Layout,
+    name: 'configure',
+    redirect: '/configure/index',
+    meta: { title: '配置管理', icon: 'el-icon-monitor',role: ['admin']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'configure-index',
+      component: () => import('@/views/configure/index'),
+      meta: { title: '配置列表',role: ['admin'] }
+    }]
+  },
+  
+  {
+    path: '/log',
+    component: Layout,
+    name: 'Log',
+    redirect: '/log/index',
+    meta: { title: '日志管理', icon: 'el-icon-monitor',role: ['admin'] },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'Log-index',
+      component: () => import('@/views/log/index'),
+      meta: { title: '日志',role: ['admin'] }
+    }]
+  },
+
+
+  
+
+  // {
+  //   path: '/permission',
+  //   component: Layout,
+  //   name: '权限测试',
+  //   meta: { title: '用户管理', icon: 'el-icon-monitor',role: ['admin'] }, //页面需要的权限
+  //   children: [
+  //   { 
+  //     path: 'index',
+  //     component: Permission,
+  //     name: '权限测试页',
+  //     meta: { role: ['admin','super_editor'] }  //页面需要的权限
+  //   }]
+  // },
+  { path: '*', redirect: '/404', hidden: true }
+];

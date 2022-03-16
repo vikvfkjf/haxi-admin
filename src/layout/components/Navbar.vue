@@ -40,7 +40,6 @@ export default {
     ])
   },
   mounted() {
-    console.log(this.user_info);
   },
   methods: {
     toggleSideBar() {

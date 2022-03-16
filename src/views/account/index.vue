@@ -5,47 +5,76 @@
     </div>
 
     <div class="base-box">
-      <div class="section section1">
-        <ul>
-          <li>
-            <span class="lab">登录名：</span>
-            <span class="value">{{user_info.name}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="changeNameBtn">更改</el-button>
-            </div>
-          </li>
-          <!-- <li>
-            <span class="lab">公司名：</span>
-            <span class="value">{{user_info.admin_company?user_info.admin_company.name:'暂无'}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="changeCompanyName">更改</el-button>
-            </div>
-          </li> -->
-          <li>
-            <span class="lab">邮箱：</span>
-            <span class="value">{{user_info.email}}</span>
-            <div class="btns">
-              <el-button plain  size="mini" @click="changeEmailBtn">更改</el-button>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+      <el-form ref="form" :model="form" label-width="80px" size="mini">
 
-    <change-user-dialog ref="changeUserDialog"></change-user-dialog>
+        <el-form-item :label="linkLabel1" v-if="user_info.role==3">
+          <el-input :value="user_info.url_list[0].prefix_address+'?promo='+user_info.promo_code" type="text" disabled></el-input>
+          <el-button class="copy" v-clipboard:copy="user_info.url_list[0].prefix_address+'?promo='+user_info.promo_code" v-clipboard:success="onCopy">复制</el-button>
+        </el-form-item>
+
+        <el-form-item :label="linkLabel2" v-if="user_info.role==3">
+          <el-input :value="user_info.url_list[1].prefix_address+'?promo='+user_info.promo_code" type="text" disabled></el-input>
+          <el-button class="copy" v-clipboard:copy="user_info.url_list[1].prefix_address+'?promo='+user_info.promo_code" v-clipboard:success="onCopy">复制</el-button>
+        </el-form-item>
+
+        <el-form-item label="编号" prop="user_no">
+          <el-input v-model="form.user_no" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="eth提款地址" prop="eth_withdraw_address" v-if="user_info.role!=1">
+          <el-input v-model="form.eth_withdraw_address"></el-input>
+        </el-form-item>
+
+        <el-form-item label="tron提款地址" prop="tron_withdraw_address" v-if="user_info.role!=1">
+          <el-input v-model="form.tron_withdraw_address" type="text"></el-input>
+        </el-form-item>
+
+        
+
+        <el-form-item label="" prop="tron_withdraw_address">
+          <el-button type="primary" @click="sure" size="mini">修改</el-button>
+        </el-form-item>
+      </el-form>
+
+      
+    </div>
   </div>
 
 </template>
 
 <script>
+  import {changeUserInfo} from '@/api/account'
   import {
     mapGetters
   } from 'vuex'
-  import changeUserDialog from './components/change-user-dialog.vue'
   export default {
     name: 'Account-index',
-    components:{
-      changeUserDialog
+    data() {
+      return {
+        form: {
+          user_no: "",
+          name: "",
+          password: "",
+          email: "",
+          phone: "",
+          tron_withdraw_address: "",
+          eth_withdraw_address: "",
+        },
+        linkLabel1:null,
+        linkLabel2:null,
+
+      }
     },
     computed: {
       ...mapGetters([
@@ -53,37 +82,62 @@
       ])
     },
     mounted() {
-      console.log(this.user_info)
-      // this.changePassword();
+      this.form = {
+        user_no: this.user_info.user_no,
+        name: this.user_info.name,
+        email: this.user_info.email,
+        phone: this.user_info.phone,
+        tron_withdraw_address: this.user_info.tron_withdraw_address,
+        tron_withdraw_sum: this.user_info.tron_withdraw_sum,
+        eth_withdraw_address: this.user_info.eth_withdraw_address,
+        eth_withdraw_sum: this.user_info.eth_withdraw_sum,
+      }
+
+      this.linkLabel1 = this.user_info.url_list[0].project_type==1?'eth':'trx' + '推广链接';
+      this.linkLabel2 = this.user_info.url_list[1].project_type==2?'trx':'eth' + '推广链接';
     },
-    methods:{
-      changeEmailBtn() {
-        var params = {
-          title:'修改邮箱',
-          en_label:'email',
-          cn_label:'邮箱',
-          value:this.user_info.email
-        }
-        this.$refs.changeUserDialog.show(params);
+    methods: {
+      sure() {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.loading = true;
+            var params = this.form;
+            console.log(this.form);
+            changeUserInfo(params).then(res => {
+              this.loading = false;
+              if (res.status_code == 200) {
+                this.$notify({
+                  title: '提示',
+                  message: '修改成功',
+                  type: 'success'
+                })
+                store.dispatch('user/getInfo');
+                
+                // this.handleClose();
+                // this.$emit('success');
+              } else {
+                this.$notify({
+                  title: '提示',
+                  message: '新增失败',
+                  type: 'error'
+                })
+                return false;
+              }
+            }).catch(err=>{
+              this.loading = false;
+            })
+          }
+        })
+
       },
-      changeCompanyName() {
-        var params = {
-          title:'修改公司名称',
-          en_label:'company_name',
-          cn_label:'公司名称',
-          value:this.user_info.admin_company?this.user_info.admin_company.name:null
-        }
-        this.$refs.changeUserDialog.show(params);
-      },
-      changeNameBtn() {
-        var params = {
-          title:'修改用户名',
-          en_label:'name',
-          cn_label:'用户名称',
-          value:this.user_info.name
-        }
-        this.$refs.changeUserDialog.show(params);
-      },
+
+      onCopy() {
+        this.$notify({
+          title: '提示',
+          message: '复制成功',
+          type: 'success'
+        })
+      }
     }
   }
 
@@ -112,34 +166,36 @@
       }
     }
 
-    .base-box{
+    .base-box {
       -webkit-box-shadow: 0 0 5px 0 rgb(69 116 208 / 20%);
       box-shadow: 0 0 5px 0 rgb(69 116 208 / 20%);
-      padding: 0 20px;
+      padding: 20px;
       color: #606060;
       background-color: #fff;
+      .el-form{
+        width:500px;
+      }
+    }
 
-      .section{
-        padding:20px 0;
-        border-bottom:1px solid #ececec;
-        ul{
-          li{
-            display:flex;
-            flex-direction: row;
-            line-height:40px;
-            color: #606060;
-            font-size:14px;
-            // justify-content:flex-start;
-            .lab{
-              width:80px;
-            }
-            .value{
-              margin-right:20px;
-            }
-          }
-        }
+    .el-form-item{
+      position:relative;
+      .copy{
+        position:absolute;
+        left:400px;
+        top:0;
       }
     }
   }
 
+</style>
+
+<style lang="scss">
+.account-index-container{
+  .el-form-item__label{
+    width:100px !important;
+  }
+  .el-form-item__content{
+    margin-left:100px !important;;
+  }
+}
 </style>

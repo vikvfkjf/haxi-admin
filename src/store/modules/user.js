@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo } from '@/api/account'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { MessageBox, Message } from 'element-ui'
@@ -37,7 +37,7 @@ const actions = {
   login({ commit }, userInfo) {
     const { phone, password,jump_key } = userInfo
     return new Promise((resolve, reject) => {
-      login({ phone: phone.trim(), password: password,jump_key:jump_key}).then(res => {
+      login({ name: phone.trim(), password: password}).then(res => {
         const { data } = res
         // console.log('res',res);
         if(res.status_code==200) {

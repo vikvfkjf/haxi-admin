@@ -1,14 +1,24 @@
 import axios from 'axios'
+import https from 'https'
+
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
+
 import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 20000, // request timeout
 })
+
+// const agent = new https.Agent({  
+//   rejectUnauthorized: true
+// });
+// axios.get(process.env.VUE_APP_BASE_API, { httpsAgent: agent });
+
+
 
 // request interceptor
 service.interceptors.request.use(
@@ -45,7 +55,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    console.log(res);
     // if the custom status_code is not 20000, it is judged as an error.
     if (res.status_code !== 200) {
       

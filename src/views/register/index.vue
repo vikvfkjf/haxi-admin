@@ -97,7 +97,7 @@
     validUsername
   } from '@/utils/validate'
 
-  import {getVerifyCode,register} from '@/api/user';
+  import {getVerifyCode,register} from '@/api/account';
 
   export default {
     name: 'Login',

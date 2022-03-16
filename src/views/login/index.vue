@@ -49,7 +49,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-  import {getVerifyCode} from '@/api/user';
+  import {getVerifyCode} from '@/api/account';
 
 export default {
   name: 'Login',
