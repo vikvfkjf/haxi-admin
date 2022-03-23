@@ -44,6 +44,11 @@
           <el-form-item label="">
             <el-button type="primary" @click="search">查询</el-button>
           </el-form-item>
+
+          <el-form-item style = "float:right;">
+            <span>划转统计：{{transferNum}}</span>
+          </el-form-item>
+
         </el-form>
       </div>
 
@@ -90,6 +95,7 @@
   import {formatDate} from '@/utils/time.js'
   import {
     getTransferList,
+    getTransferTotal
   } from '@/api/earnrule'
   import {getAgentList} from '@/api/agent'
   export default {
@@ -119,6 +125,9 @@
           per_page: 10,
           total: null,
         },
+
+        transferNum:null
+        
       }
     },
     computed: {
@@ -129,6 +138,7 @@
     mounted() {
       this.getAgentList();
       this.getTransferList();
+      this.getTransferTotal();
     },
     methods: {
       
@@ -165,9 +175,27 @@
         })
       },
 
+      getTransferTotal() {
+        let params = {
+          begin_time:this.form.time?this.form.time[0]/1000:null,
+          end_time:this.form.time?(this.form.time[1]+24*3600*1000)/1000:null,
+          agent_user_no:this.form.agent_user_no?this.form.agent_user_no:null,
+          // 'equal[agent_user_no]':this.form.agent_user_no?this.form.agent_user_no:null,
+          // 'great_equal[begin_time]':this.form.time?this.form.time[0]/1000:null,
+          // 'less_equal[begin_time]':this.form.time?(this.form.time[1]+24*3600*1000)/1000:null,
+          // page: this.pages.page,
+          // per_page: this.pages.per_page
+        }
+        getTransferTotal(params).then(res=>{
+          this.transferNum = res.data.transfer_sum;
+          console.log(res);
+        })
+      },
+
       search() {
         this.pages.page = 1;
         this.getTransferList();
+        this.getTransferTotal();
       },
       
       handleSelectionChange(val) {

@@ -65,3 +65,16 @@ export function getTransferList(params) {
     params
   })
 }
+
+/**
+ * 获取划转统计
+ * @param {*} params 
+ * @returns 
+ */
+export function getTransferTotal(params) {
+  return request({
+    url: '/v1/admin/statics-manage/transfer-info',
+    method: 'get',
+    params
+  })
+}

@@ -4,8 +4,8 @@
       v-loading="loading">
       <div class="content">
         <el-form ref="form" :model="form" label-width="120px" size="mini" :rules="rules">
-          <el-form-item label="会员所属" prop="belong_admin_user_no">
-            <el-input v-model="form.name"></el-input>
+          <el-form-item label="会员ID" prop="member_no">
+            <el-input v-model="form.member_no" disabled></el-input>
           </el-form-item>
           <el-form-item label="来源推广码" prop="from_promo_code">
             <el-input v-model="form.from_promo_code"></el-input>
@@ -51,16 +51,16 @@
         val: {},
         passList:[],
         form: {
-          belong_admin_user_no: null,
+          member_no: null,
           from_promo_code : null,
           status: null,
           member_type :null,
           balance_usdt :null,
         },
         rules: {
-          belong_admin_user_no: [{
+          member_no: [{
             required: true,
-            message: '请输入会员所属代理或管理员',
+            message: '请输入会员Id',
             trigger: 'blur'
           }],
           from_promo_code : [{
@@ -90,9 +90,10 @@
     },
     methods: {
       show(val) {
+        console.log('hahah',val);
         this.val = val;
         this.form = {
-          belong_admin_user_no: val.belong_admin_user_no,
+          member_no: val.member_no,
           from_promo_code: val.from_promo_code,
           status : val.status ,
           member_type :val.member_type ,
@@ -108,7 +109,7 @@
             this.loading = true;
 
             var params = {        
-                belong_admin_user_no:this.form.belong_admin_user_no,
+                member_no:this.form.member_no,
                 from_promo_code :this.form.from_promo_code,
                 status :Number(this.form.status ),
                 member_type :Number(this.form.member_type ),
@@ -144,7 +145,7 @@
       reset() {
         this.loading = false;
         this.form = {
-          belong_admin_user_no: null,
+          member_no: null,
           from_promo_code : null,
           status: null,
           member_type :null,
