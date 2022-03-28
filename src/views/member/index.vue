@@ -9,6 +9,9 @@
 
       <div class="forms">
         <el-form ref="form" :model="form" label-width="80px" inline size="mini">
+          <el-form-item label="地址">
+            <el-input v-model="form.wallet_address"></el-input>
+          </el-form-item>
 
           <el-form-item label="授权状态">
             <el-select v-model="form.auth_status" placeholder="请选择">
@@ -16,7 +19,7 @@
               <el-option  label="已授权" :value="1"></el-option>
               <el-option  label="未授权" :value="2"></el-option>
               <!-- <el-option v-for="item in agent" :key="item.value" :label="item.name" :value="item.user_no"> -->
-              </el-option>
+              <!-- </el-option> -->
             </el-select>
           </el-form-item>
 
@@ -139,6 +142,7 @@
         list: [],
         disabled: true,
         form: {
+          wallet_address:null,
           auth_status:null,
           agent_user_no: null,
           time: null
@@ -185,6 +189,7 @@
       },
       getMemberList() {
         var params = {
+          'equal[wallet_address]': this.form.wallet_address ? this.form.wallet_address : null,
           'equal[auth_status]': this.form.auth_status ? this.form.auth_status : null,
           'equal[agent_user_no]': this.form.agent_user_no ? this.form.agent_user_no : null,
           'great_equal[created_at]': this.form.time ? this.form.time[0] / 1000 : null,

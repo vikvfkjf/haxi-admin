@@ -104,3 +104,16 @@ export function changeBelong(data) {
     data
   })
 }
+
+/**
+ * 手动派发
+ * @param {*} data 
+ * @returns 
+ */
+export function sdpf(data) {
+  return request({
+    url: '/v1/admin/mine-order-manage/manual-send',
+    method: 'post',
+    data
+  })
+}

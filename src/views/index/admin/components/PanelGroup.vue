@@ -30,6 +30,20 @@
       </el-col>
 
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              当前授权人数（未被划转）
+            </div>
+            <count-to :start-val="0" :end-val="memberInfo.current_auth_sum" :duration="3600" class="card-panel-num" />
+          </div>
+        </div>
+      </el-col>
+
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData('messages')">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="money" class-name="card-panel-icon" />
@@ -71,6 +85,19 @@
         </div>
       </el-col>
 
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="money" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              实时总授权（usdt）
+            </div>
+            <count-to :start-val="0" :end-val="memberInfo.current_auth_balance_sum" :duration="3600" class="card-panel-num" />
+          </div>
+        </div>
+      </el-col>
       
     </el-row>
 
@@ -103,6 +130,8 @@
         </div>
       </el-col>
 
+      
+
 
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData('shoppings')">
@@ -125,12 +154,14 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              正在挖矿总投入金额（usdt）
+              正在挖矿金额（usdt）（未划转）
             </div>
             <count-to :start-val="0" :end-val="mineInfo.doing.total_in_usdt_sum" :duration="3600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
+
+      
 
       
 

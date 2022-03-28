@@ -26,6 +26,9 @@
               <el-option label="全部" value=""></el-option>
               <el-option label="进行中&未领取" :value="1"></el-option>
               <el-option label="已领取" :value="2"></el-option>
+              <el-option label="派发失败" :value="3"></el-option>
+              <el-option label="无效订单" :value="4"></el-option>
+              <el-option label="手动派发成功" :value="5"></el-option>
             </el-select>
           </el-form-item>
 
@@ -73,13 +76,13 @@
         <el-table-column prop="draw_status" label="领取状态" width="100">
           <template slot-scope="scope">
             <span v-if="scope.row.draw_status==1" style="color:red;">
-              <!-- {{new Date().getTime()/1000}}
-              <br>
-              {{scope.row.end_time}} -->
               <span v-if="new Date().getTime()/1000 < scope.row.end_time">进行中</span>
               <span v-else>未领取</span>
             </span>
             <span v-else-if="scope.row.draw_status==2" style="color:green;">已结束</span>
+            <span v-else-if="scope.row.draw_status==3" style="color:green;">派发失败</span>
+            <span v-else-if="scope.row.draw_status==4" style="color:green;">无效订单</span>
+            <span v-else-if="scope.row.draw_status==5" style="color:green;">手动派发成功</span>
           </template>
         </el-table-column>
         
@@ -102,6 +105,7 @@
         <el-table-column prop="" label="操作">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="balanceRefresh(scope.row)">更新余额</el-button>
+            <el-button type="warning" size="mini" @click="sdpa(scope.row)" v-if="scope.row.draw_status==3 || scope.row.draw_status==4">手动派发</el-button>
           </template>
         </el-table-column>
 
@@ -127,6 +131,7 @@
   import {
     balanceRefresh,
     memberEarnList,
+    sdpf
   } from '@/api/member'
   // import infoDialog from './components/info-dialog.vue'
   // import addDialog from './components/add-dialog.vue'
@@ -257,6 +262,37 @@
           }
         })
       },
+
+      sdpa(row) {
+        this.$confirm('当前挖矿派发失败，是否手动派发收益？, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          var data = {
+            order_no: String(row.order_no)
+          }
+          sdpf(data).then(res => {
+            if (res.status_code == 200) {
+              this.$message({
+                type: 'success',
+                message: '派发成功!'
+              });
+              this.memberEarnList();
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.err_msg
+              });
+            }
+          })
+        }).catch((err) => {
+          this.$message({
+            type: 'info',
+            message: err.err_msg
+          });
+        });
+      }
     }
   }
 
