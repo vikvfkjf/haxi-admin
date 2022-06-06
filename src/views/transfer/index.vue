@@ -58,7 +58,7 @@
         </el-table-column>
         <!-- <el-table-column prop="id" label="id" width="50">
         </el-table-column> -->
-        <el-table-column prop="operater_user.name" label="操作者" width="100">
+        <el-table-column prop="admin_user_no" label="操作者编号" width="100">
         </el-table-column>
         <el-table-column prop="agent_name" label="所属代理" width="100">
         </el-table-column>

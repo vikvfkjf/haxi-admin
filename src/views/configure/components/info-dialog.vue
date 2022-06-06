@@ -11,7 +11,7 @@
             <el-input v-model="form.name" disabled></el-input>
           </el-form-item>
           <el-form-item label="值" prop="value">
-            <el-input v-model="form.value" type="number"></el-input>
+            <el-input v-model="form.value"></el-input>
           </el-form-item>
         </el-form>
       </div>

@@ -38,14 +38,15 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           await store.dispatch('user/getInfo').then(res=>{
             // console.log(res);
-            let roles = null;
-            if(res.role==1) {
-              roles = 'admin';
-            }else if(res.role==2) {
-              roles = 'agent';
-            }else if(res.role==3) {
-              roles = 'sale';
-            }
+            let roles = 'admin';
+            // let roles = null;
+            // if(res.role==1) {
+            //   roles = 'admin';
+            // }else if(res.role==2) {
+            //   roles = 'agent';
+            // }else if(res.role==3) {
+            //   roles = 'sale';
+            // }
             store.dispatch('GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
               console.log('store.getters',store.getters.addRouters);
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表

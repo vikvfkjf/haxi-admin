@@ -24,14 +24,6 @@
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="form.email"></el-input>
           </el-form-item>
-
-          <el-form-item label="eth总的提现金额" prop="eth_withdraw_sum">
-            <el-input v-model="form.eth_withdraw_sum"></el-input>
-          </el-form-item>
-
-          <el-form-item label="tron总的提现金额" prop="tron_withdraw_sum">
-            <el-input v-model="form.tron_withdraw_sum"></el-input>
-          </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">

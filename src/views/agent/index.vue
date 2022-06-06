@@ -16,9 +16,10 @@
         </el-table-column>
         <el-table-column prop="role" label="角色" width="80">
           <template slot-scope="scope">
-            <span v-if="scope.row.role==1">管理员</span>
-            <span v-if="scope.row.role==2">代理</span>
-            <span v-if="scope.row.role==3">业务员</span>
+            <span v-if="scope.row.role==1">超级管理员</span>
+            <span v-if="scope.row.role==2">管理员</span>
+            <span v-if="scope.row.role==3">代理</span>
+            <span v-if="scope.row.role==4">业务员</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态" width="80">
@@ -31,10 +32,28 @@
         </el-table-column>
         <el-table-column prop="email" label="邮箱" width="100">
         </el-table-column>
-        <el-table-column prop="eth_withdraw_address" label="eth提款地址" width="150"></el-table-column>
-        <el-table-column prop="eth_withdraw_sum" label="eth总提现金额" width="150"></el-table-column>
-        <el-table-column prop="tron_withdraw_address" label="tron提款地址" width="150"></el-table-column>
-        <el-table-column prop="tron_withdraw_sum" label="tron总提现金额" width="150"></el-table-column>
+        <el-table-column prop="brokerage_percent" label="抽成百分比" width="100">
+        </el-table-column>
+        <el-table-column prop="total_brokerage" label="总抽成" width="100">
+        </el-table-column>
+
+        <el-table-column prop="member_in_sum" label="用户投入金额" width="100">
+        </el-table-column>
+        <el-table-column prop="member_out_sum" label="用户派送金额" width="100">
+        </el-table-column>
+
+      
+
+        <el-table-column prop="game_wallet_list" label="地址列表" width="200">
+          <template slot-scope="scope">
+            <div v-for="(item,index) in scope.row.game_wallet_list" :key="index">
+              <span v-if="item.wallet_kind==1">ERC20:{{item.wallet_address}}</span>
+              <span v-if="item.wallet_kind==2">TRC20:{{item.wallet_address}}</span>
+              <span v-if="item.wallet_kind==3">BEP20:{{item.wallet_address}}</span>
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="" label="操作">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="updateAgent(scope.row)">修改</el-button>

@@ -12,8 +12,9 @@
           </el-form-item>
           <el-form-item label="角色" prop="role">
             <el-select v-model="form.role">
-              <el-option label="代理" :value="2" v-if="user_info.role==1"></el-option>
-              <el-option label="业务员" :value="3"></el-option>
+              <el-option label="管理员" :value="2" v-if="user_info.role==1"></el-option>
+              <el-option label="代理" :value="3" v-if="user_info.role==1 || user_info.role==2"></el-option>
+              <el-option label="业务员" :value="4"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="手机号" prop="phone">

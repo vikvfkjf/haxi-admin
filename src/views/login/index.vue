@@ -40,6 +40,20 @@
           </span>
         </el-form-item>
 
+        <el-form-item prop="phone">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="google_auth_code"
+            v-model="loginForm.google_auth_code"
+            placeholder="谷歌验证码，有绑定时必传"
+            name="google_auth_code"
+            type="text"
+            auto-complete="off"
+          />
+        </el-form-item>
+
         <el-button :loading="loading" type="danger" round @click.native.prevent="handleLogin">登录</el-button>
 
       </el-form>
@@ -76,7 +90,8 @@ export default {
         password: '',
         // verify_key: 'jump_key',
         // verify_code:'dddyyy123iiikkkaaa',
-        jump_key:'ddlksadfjiow3223dcsFaa'
+        jump_key:'ddlksadfjiow3223dcsFaa',
+        google_auth_code:null
       },
       loginRules: {
         phone: [{ required: true, trigger: 'blur', message: '请输入用户名或手机号' }],

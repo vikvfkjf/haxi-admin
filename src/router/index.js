@@ -89,18 +89,55 @@ export function resetRouter() {
 export default router
 
 export const asyncRouterMap = [
+  
+
   {
-    path: '/project',
+    path: '/game',
     component: Layout,
-    name: 'project',
-    redirect: '/project/index',
-    meta: { title: '项目管理', icon: 'el-icon-monitor',role: ['admin']  },
+    name: 'game',
+    redirect: '/game/index',
+    meta: { title: '游戏管理', icon: 'el-icon-monitor',role: ['admin']  },
     alwaysShow: true,
     children: [{
       path: 'index',
-      name: 'project-index',
-      component: () => import('@/views/project/index'),
-      meta: { title: '项目列表',role: ['admin'] }
+      name: 'game-index',
+      component: () => import('@/views/game/index'),
+      meta: { title: '游戏列表',role: ['admin'] }
+    }]
+  },
+
+  {
+    path: '/wallet',
+    component: Layout,
+    name: 'wallet',
+    redirect: '/wallet/index',
+    meta: { title: '钱包管理', icon: 'el-icon-monitor',role: ['admin']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'wallet-index',
+      component: () => import('@/views/wallet/index'),
+      meta: { title: '钱包列表',role: ['admin'] }
+    }]
+  },
+
+  {
+    path: '/bet',
+    component: Layout,
+    name: 'bet',
+    redirect: '/bet/index',
+    meta: { title: '投注管理', icon: 'el-icon-monitor',role: ['admin']  },
+    alwaysShow: true,
+    children: [{
+      path: 'index',
+      name: 'bet-index',
+      component: () => import('@/views/bet/index'),
+      meta: { title: '投注列表',role: ['admin'] }
+    },{
+      path: 'date-record',
+      name: 'date-record',
+      component: () => import('@/views/bet/date-record'),
+      meta: { title: '投注汇总',role: ['admin'] }
     }]
   },
 
@@ -116,48 +153,19 @@ export const asyncRouterMap = [
       name: 'member-index',
       component: () => import('@/views/member/index'),
       meta: { title: '会员列表',role: ['admin','agent','sale'] }
-    },{
-      path: 'earn',
-      name: 'member-earn',
-      component: () => import('@/views/member/earn'),
-      meta: { title: '会员挖矿收益',role: ['admin','agent','sale'] }
-    }]
+    }
+    // ,{
+    //   path: 'earn',
+    //   name: 'member-earn',
+    //   component: () => import('@/views/member/earn'),
+    //   meta: { title: '会员挖矿收益',role: ['admin','agent','sale'] }
+    // }
+  ]
   },
 
-  {
-    path: '/earnrule',
-    component: Layout,
-    name: 'earnrule',
-    redirect: '/earnrule/index',
-    meta: { title: '收益管理', icon: 'el-icon-monitor',role: ['admin','agent']  },
-    alwaysShow: true,
-    children: [{
-      path: 'index',
-      name: 'earnrule-index',
-      component: () => import('@/views/earnrule/index'),
-      meta: { title: '收益规则',role: ['admin'] }
-    },{
-      path: 'transfer',
-      name: 'earnrule-transfer',
-      component: () => import('@/views/transfer/index'),
-      meta: { title: '划转记录',role: ['admin','agent'] }
-    }]
-  },
+  
 
-  {
-    path: '/pool',
-    component: Layout,
-    name: 'pool',
-    redirect: '/pool/index',
-    meta: { title: '矿池管理', icon: 'el-icon-monitor',role: ['admin']  },
-    alwaysShow: true,
-    children: [{
-      path: 'index',
-      name: 'pool-index',
-      component: () => import('@/views/pool/index'),
-      meta: { title: '矿池列表',role: ['admin'] }
-    }]
-  },
+  
 
   {
     path: '/agent',
@@ -203,6 +211,8 @@ export const asyncRouterMap = [
       meta: { title: '日志',role: ['admin'] }
     }]
   },
+
+  
 
 
   

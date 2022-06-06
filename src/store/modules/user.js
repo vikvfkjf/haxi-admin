@@ -35,9 +35,9 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { phone, password,jump_key } = userInfo
+    const { phone, password,jump_key,google_auth_code } = userInfo
     return new Promise((resolve, reject) => {
-      login({ name: phone.trim(), password: password}).then(res => {
+      login({ name: phone.trim(), password: password,google_auth_code:google_auth_code}).then(res => {
         const { data } = res
         // console.log('res',res);
         if(res.status_code==200) {

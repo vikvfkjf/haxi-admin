@@ -46,3 +46,16 @@ export function changeUserInfo(data) {
   })
 }
 
+/**
+ * 开启谷歌验证
+ * @param {*} data 
+ * @returns 
+ */
+ export function google(data) {
+  return request({
+    url: '/v1/admin/user/open-google-auth',
+    method: 'post',
+    data
+  })
+}
+

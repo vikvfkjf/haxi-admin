@@ -6,17 +6,6 @@
 
     <div class="base-box">
       <el-form ref="form" :model="form" label-width="80px" size="mini">
-
-        <el-form-item :label="linkLabel1" v-if="user_info.role==3">
-          <el-input :value="user_info.url_list[0].prefix_address+'?promo='+user_info.promo_code" type="text" disabled></el-input>
-          <el-button class="copy" v-clipboard:copy="user_info.url_list[0].prefix_address+'?promo='+user_info.promo_code" v-clipboard:success="onCopy">复制</el-button>
-        </el-form-item>
-
-        <el-form-item :label="linkLabel2" v-if="user_info.role==3">
-          <el-input :value="user_info.url_list[1].prefix_address+'?promo='+user_info.promo_code" type="text" disabled></el-input>
-          <el-button class="copy" v-clipboard:copy="user_info.url_list[1].prefix_address+'?promo='+user_info.promo_code" v-clipboard:success="onCopy">复制</el-button>
-        </el-form-item>
-
         <el-form-item label="编号" prop="user_no">
           <el-input v-model="form.user_no" disabled></el-input>
         </el-form-item>
@@ -32,20 +21,17 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="form.email"></el-input>
         </el-form-item>
-        <el-form-item label="eth提款地址" prop="eth_withdraw_address" v-if="user_info.role!=1">
-          <el-input v-model="form.eth_withdraw_address"></el-input>
-        </el-form-item>
-
-        <el-form-item label="tron提款地址" prop="tron_withdraw_address" v-if="user_info.role!=1">
-          <el-input v-model="form.tron_withdraw_address" type="text"></el-input>
-        </el-form-item>
-
         
 
         <el-form-item label="" prop="tron_withdraw_address">
           <el-button type="primary" @click="sure" size="mini">修改</el-button>
         </el-form-item>
       </el-form>
+
+      <div class="google" v-if="user_info.google_auth_qrcode">
+        <div class="qrcode" ref="qrCodeUrl" style="margin-bottom:20px;"></div>
+        <el-button type="primary" @click="google" size="mini">已扫码谷歌验证</el-button>
+      </div>
 
       
     </div>
@@ -54,7 +40,8 @@
 </template>
 
 <script>
-  import {changeUserInfo} from '@/api/account'
+  import {changeUserInfo,google} from '@/api/account'
+  import QRCode from 'qrcodejs2'
   import {
     mapGetters
   } from 'vuex'
@@ -71,8 +58,6 @@
           tron_withdraw_address: "",
           eth_withdraw_address: "",
         },
-        linkLabel1:null,
-        linkLabel2:null,
 
       }
     },
@@ -87,14 +72,8 @@
         name: this.user_info.name,
         email: this.user_info.email,
         phone: this.user_info.phone,
-        tron_withdraw_address: this.user_info.tron_withdraw_address,
-        tron_withdraw_sum: this.user_info.tron_withdraw_sum,
-        eth_withdraw_address: this.user_info.eth_withdraw_address,
-        eth_withdraw_sum: this.user_info.eth_withdraw_sum,
       }
-
-      this.linkLabel1 = this.user_info.url_list[0].project_type==1?'eth':'trx' + '推广链接';
-      this.linkLabel2 = this.user_info.url_list[1].project_type==2?'trx':'eth' + '推广链接';
+      this.creatQrCode();
     },
     methods: {
       sure() {
@@ -136,6 +115,29 @@
           title: '提示',
           message: '复制成功',
           type: 'success'
+        })
+      },
+
+      creatQrCode() {
+        var qrcode = new QRCode(this.$refs.qrCodeUrl, {
+            text: this.user_info.google_auth_qrcode,
+            width: 100,
+            height: 100,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        })
+      },
+      google() {
+        google().then(res=>{
+          if(res.status_code==200) {
+            this.$notify({
+              title: '提示',
+              message: '开启成功',
+              type: 'success'
+            })
+          }
+          // console.log(res);
         })
       }
     }
@@ -187,6 +189,10 @@
     }
   }
 
+  .google{
+      padding-left:100px;
+    }
+
 </style>
 
 <style lang="scss">
@@ -198,4 +204,6 @@
     margin-left:100px !important;;
   }
 }
+
+ 
 </style>

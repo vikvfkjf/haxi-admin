@@ -8,10 +8,31 @@
     <div class="tables">
 
       <div class="forms">
-        <el-form ref="form" :model="form" label-width="80px" inline size="mini">
+        <el-form ref="form" :model="form" label-width="100px" inline size="mini">
           <el-form-item label="地址">
             <el-input v-model="form.wallet_address"></el-input>
           </el-form-item>
+
+          <el-form-item label="所属代理" v-if="user_info.role==1">
+            <el-select v-model="form.agent_name" placeholder="请选择">
+              <el-option :key="0" label="全部" value=""></el-option>
+              <el-option
+                v-for="item in agent"
+                :key="item.value"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="推广码">
+            <el-input v-model="form.promo_code"></el-input>
+          </el-form-item>
+
+          <el-form-item label="来源推广码">
+            <el-input v-model="form.from_promo_code"></el-input>
+          </el-form-item>
+
 
           <el-form-item label="授权状态">
             <el-select v-model="form.auth_status" placeholder="请选择">
@@ -22,20 +43,6 @@
               <!-- </el-option> -->
             </el-select>
           </el-form-item>
-
-          <!-- <el-form-item label="所属代理" v-if="user_info.role==1">
-            <el-select v-model="form.agent_user_no" placeholder="请选择">
-              <el-option :key="0" label="全部" value=""></el-option>
-              <el-option v-for="item in agent" :key="item.value" :label="item.name" :value="item.user_no">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="推广人员" v-if="user_info.role==2">
-            <el-select v-model="form.agent_user_no" placeholder="请选择">
-              <el-option v-for="item in agent" :key="item.value" :label="item.name" :value="item.user_no">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="创建时间">
             <el-date-picker v-model="form.time" value-format="timestamp" type="daterange" range-separator="至"
               start-placeholder="开始日期" end-placeholder="结束日期">
@@ -47,11 +54,15 @@
         </el-form>
       </div>
 
-      <el-table :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 105px)"
-        size="mini" row-key="member_no" :tree-props="{children: 'childrens'}" v-loading="loading">
+      <el-table :data="list" style="width: 100%" :header-cell-style="{background:'#ececec'}" height="calc(100% - 150px)"
+        size="mini" row-key="id" :tree-props="{children: 'childrens'}" v-loading="loading">
         <el-table-column type="selection" width="55">
         </el-table-column>
-        <el-table-column prop="member_no" label="会员编号" width="150">
+        <el-table-column prop="member_no" label="会员编号" width="100">
+        </el-table-column>、
+        <el-table-column prop="promo_code" label="推广码" width="100">
+        </el-table-column>
+        <el-table-column prop="from_promo_code" label="来源推广码" width="100">
         </el-table-column>
         <el-table-column prop="wallet_address" label="会员钱包地址" width="100">
         </el-table-column>
@@ -85,14 +96,30 @@
             <span v-if="scope.row.member_type==2">波场</span>
           </template>
         </el-table-column>
+
+        <el-table-column prop="belong_user_type" label="会员所属类型" width="100">
+          <template slot-scope="scope">
+            <span v-if="scope.row.belong_user_type==1">后台人员推广</span>
+            <span v-if="scope.row.belong_user_type==2">会员推广</span>
+          </template>
+        </el-table-column>
+
+
         <el-table-column prop="earn_usdt" label="usdt收益" width="100">
+        </el-table-column>
+        <el-table-column prop="last_conn_ip" label="最后登录ip" width="100">
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.created_at | formatDate}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="last_conn_time" label="最后登录时间" width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.last_conn_time | formatDate}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="" label="操作" width="500">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="updateMember(scope.row)">修改</el-button>
             <el-button type="warning" size="mini" @click="dist(scope.row)" v-if="user_info.role==1">分配后台人员</el-button>
@@ -141,8 +168,12 @@
       return {
         list: [],
         disabled: true,
+        agent:[],
         form: {
           wallet_address:null,
+          agent_name:null,
+          promo_code:null,
+          from_promo_code:null,
           auth_status:null,
           agent_user_no: null,
           time: null
@@ -190,6 +221,9 @@
       getMemberList() {
         var params = {
           'equal[wallet_address]': this.form.wallet_address ? this.form.wallet_address : null,
+          'equal[promo_code]': this.form.promo_code ? this.form.promo_code : null,
+          'equal[from_promo_code]': this.form.from_promo_code ? this.form.from_promo_code : null,
+          'like[agent_name]':this.form.agent_name?this.form.agent_name:null,
           'equal[auth_status]': this.form.auth_status ? this.form.auth_status : null,
           'equal[agent_user_no]': this.form.agent_user_no ? this.form.agent_user_no : null,
           'great_equal[created_at]': this.form.time ? this.form.time[0] / 1000 : null,
@@ -199,6 +233,7 @@
         }
         getMemberList(params).then(res => {
           console.log(res);
+          // this.list = [];
           if (res.status_code == 200) {
             this.list = res.data.data;
             this.pages.total = res.data.total;
